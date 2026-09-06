@@ -6,10 +6,8 @@ import {
   Activity,
   AlertTriangle,
   ArrowUpRight,
-  BarChart3,
   Bell,
   Check,
-  ChevronDown,
   CircleHelp,
   CloudRain,
   CloudSun,
@@ -35,126 +33,6 @@ import './styles.css'
 
 
 // =====================================
-// FALLBACK MOCK STATIONS
-// =====================================
-
-const mockStations = [
-  {
-    id: 'AWS_001',
-    city: 'Pune',
-    region: 'Maharashtra',
-    lat: 18.52,
-    lng: 73.86,
-    status: 'Warning',
-    color: '#ffc857',
-    risk: 62,
-    temp: 31.4,
-    humidity: 68,
-    pressure: 1009,
-    wind: 14,
-    rainfall: 2.4,
-    updated: '2 min ago'
-  },
-  {
-    id: 'AWS_002',
-    city: 'Mumbai',
-    region: 'Maharashtra',
-    lat: 19.07,
-    lng: 72.87,
-    status: 'Healthy',
-    color: '#55d6a3',
-    risk: 24,
-    temp: 29.8,
-    humidity: 78,
-    pressure: 1011,
-    wind: 19,
-    rainfall: 4.8,
-    updated: '1 min ago'
-  },
-  {
-    id: 'AWS_003',
-    city: 'Nashik',
-    region: 'Maharashtra',
-    lat: 20.01,
-    lng: 73.78,
-    status: 'Critical',
-    color: '#ff6b5f',
-    risk: 92,
-    temp: 39.6,
-    humidity: 42,
-    pressure: 997,
-    wind: 31,
-    rainfall: 0,
-    updated: '4 min ago'
-  },
-  {
-    id: 'AWS_004',
-    city: 'Delhi',
-    region: 'NCT Delhi',
-    lat: 28.61,
-    lng: 77.21,
-    status: 'High Risk',
-    color: '#ff9955',
-    risk: 74,
-    temp: 35.2,
-    humidity: 54,
-    pressure: 1004,
-    wind: 22,
-    rainfall: 0.8,
-    updated: '3 min ago'
-  },
-  {
-    id: 'AWS_005',
-    city: 'Bengaluru',
-    region: 'Karnataka',
-    lat: 12.97,
-    lng: 77.59,
-    status: 'Healthy',
-    color: '#55d6a3',
-    risk: 18,
-    temp: 24.7,
-    humidity: 74,
-    pressure: 1014,
-    wind: 11,
-    rainfall: 6.2,
-    updated: '1 min ago'
-  },
-  {
-    id: 'AWS_006',
-    city: 'Kolkata',
-    region: 'West Bengal',
-    lat: 22.57,
-    lng: 88.36,
-    status: 'Warning',
-    color: '#ffc857',
-    risk: 58,
-    temp: 30.9,
-    humidity: 81,
-    pressure: 1008,
-    wind: 17,
-    rainfall: 8.9,
-    updated: '5 min ago'
-  },
-  {
-    id: 'AWS_007',
-    city: 'Jaipur',
-    region: 'Rajasthan',
-    lat: 26.91,
-    lng: 75.78,
-    status: 'Healthy',
-    color: '#55d6a3',
-    risk: 27,
-    temp: 37.1,
-    humidity: 31,
-    pressure: 1002,
-    wind: 26,
-    rainfall: 0,
-    updated: '2 min ago'
-  }
-]
-
-
-// =====================================
 // PARAMETERS
 // =====================================
 
@@ -162,76 +40,36 @@ const parameters = {
   Temperature: {
     icon: Thermometer,
     unit: '°C',
-    value: '29.8',
-    min: '21.2',
-    max: '41.7',
-    trend: '+2.8%',
-    trendLabel: 'vs last hour',
     label: 'Temperature over time',
-    color: '#ff9e70',
-    chart: [27.1, 28.4, 27.8, 30.2, 29.3, 31.8, 30.6, 33.1, 32.4, 35.2, 34.7, 36.6],
-    anomalies: '4 active',
-    insight: 'Heat pockets detected across western grid'
+    color: '#ff9e70'
   },
 
   Humidity: {
     icon: CloudSun,
     unit: '%',
-    value: '68',
-    min: '42',
-    max: '91',
-    trend: '-4.2%',
-    trendLabel: 'vs last hour',
     label: 'Humidity over time',
-    color: '#72c9e8',
-    chart: [74, 77, 73, 79, 76, 71, 74, 67, 70, 65, 63, 68],
-    anomalies: '3 active',
-    insight: 'Drying trend emerging in central stations'
+    color: '#72c9e8'
   },
 
   Wind: {
     icon: Wind,
     unit: 'km/h',
-    value: '14',
-    min: '4',
-    max: '47',
-    trend: '+6.4%',
-    trendLabel: 'vs last hour',
     label: 'Wind speed over time',
-    color: '#b49cff',
-    chart: [9, 12, 10, 16, 14, 19, 17, 22, 20, 26, 23, 28],
-    anomalies: '2 active',
-    insight: 'Gust activity building near northern corridor'
+    color: '#b49cff'
   },
 
   Rainfall: {
     icon: CloudRain,
     unit: 'mm',
-    value: '4.8',
-    min: '0',
-    max: '82',
-    trend: '+12.1%',
-    trendLabel: 'vs last hour',
     label: 'Rainfall over time',
-    color: '#5ed9c3',
-    chart: [1.2, 2.8, 1.8, 5.2, 4.1, 8.7, 6.4, 12.3, 10.8, 18.6, 15.9, 22.4],
-    anomalies: '5 active',
-    insight: 'Monsoon cells approaching east network'
+    color: '#5ed9c3'
   },
 
   Pressure: {
     icon: Gauge,
     unit: 'hPa',
-    value: '1009',
-    min: '998',
-    max: '1022',
-    trend: '-0.8%',
-    trendLabel: 'vs last hour',
     label: 'Atmospheric pressure over time',
-    color: '#e6bf69',
-    chart: [1014, 1012, 1013, 1010, 1011, 1008, 1010, 1006, 1007, 1004, 1006, 1002],
-    anomalies: '2 active',
-    insight: 'Pressure trough forming around Maharashtra'
+    color: '#e6bf69'
   }
 }
 
@@ -242,60 +80,10 @@ const navItems = [
   ['Stations', Globe2],
   ['Alerts', Bell],
   ['Anomalies', Zap],
-  ['Reports', BarChart3],
   ['System Health', ShieldCheck],
   ['Settings', Settings],
   ['About', CircleHelp]
 ]
-
-
-// =====================================
-// MINI CHART
-// =====================================
-
-function MiniChart({ data, color, height = 58 }) {
-
-  const low = Math.min(...data)
-  const high = Math.max(...data)
-  const spread = high - low || 1
-
-  const points = data
-    .map(
-      (value, index) =>
-        `${(index / (data.length - 1)) * 100},${
-          height - ((value - low) / spread) * (height - 5) - 3
-        }`
-    )
-    .join(' ')
-
-  const area = `0,${height} ${points} 100,${height}`
-
-  return (
-    <svg
-      className="mini-chart"
-      viewBox={`0 0 100 ${height}`}
-      preserveAspectRatio="none"
-      aria-hidden="true"
-    >
-      <defs>
-        <linearGradient id="chartFill" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor={color} stopOpacity=".28" />
-          <stop offset="100%" stopColor={color} stopOpacity="0" />
-        </linearGradient>
-      </defs>
-
-      <polygon points={area} fill="url(#chartFill)" />
-
-      <polyline
-        points={points}
-        fill="none"
-        stroke={color}
-        strokeWidth="2"
-        vectorEffect="non-scaling-stroke"
-      />
-    </svg>
-  )
-}
 
 
 // =====================================
@@ -353,7 +141,16 @@ function App() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
 
-  const [selectedStation, setSelectedStation] = useState(null)
+  const [selectedStationId, setSelectedStationId] = useState(null)
+  const [stationSearchTerm, setStationSearchTerm] = useState('')
+  const [stationStatusFilter, setStationStatusFilter] = useState('All')
+  const [stationHistory, setStationHistory] = useState([])
+  const [historyLoading, setHistoryLoading] = useState(false)
+  const [historyError, setHistoryError] = useState(null)
+  const [historyParameter, setHistoryParameter] = useState('temperature')
+  const [dashboardHistory, setDashboardHistory] = useState([])
+  const [dashboardHistoryLoading, setDashboardHistoryLoading] = useState(false)
+  const [dashboardHistoryError, setDashboardHistoryError] = useState(null)
 
   const [isSidebarOpen, setSidebarOpen] = useState(false)
   const [autoRotate, setAutoRotate] = useState(true)
@@ -381,170 +178,123 @@ function App() {
   // =====================================
 
   const stations =
-    liveData && Array.isArray(liveData.stations)
+    Array.isArray(liveData?.stations)
       ? liveData.stations
-          .filter((item) => !item.error)
+          .filter((item) => item.station)
           .map((item) => {
 
             const weather = item.weather_data || {}
             const m2 = item.m2 || {}
-            const m3 = item.m3 || {}
+            const m3 = Array.isArray(item.m3) ? item.m3 : []
             const m4 = item.m4 || {}
 
-            // Get results directly from backend modules
-const risk = Math.round(
-  Number(m4.risk_score ?? 0)
-)
+            const severity = String(m4.severity ?? '').toUpperCase()
+            const status = severity === 'CRITICAL'
+              ? 'Critical'
+              : severity === 'VERY HIGH'
+                ? 'High Risk'
+                : severity === 'HIGH' || severity === 'MEDIUM'
+                  ? 'Warning'
+                  : severity === 'LOW'
+                    ? 'Healthy'
+                    : null
 
-// Module 4 decides severity.
-// If severity is missing, only use ML result as a fallback.
-const mlStatus = String(
-  m2.ml_status ??
-  m2.status ??
-  ''
-).toLowerCase()
-
-const status =
-  m4.severity ??
-  m4.status ??
-  (mlStatus.includes('anomaly')
-    ? 'Warning'
-    : 'Healthy')
-
-// Frontend only assigns display color
-const statusColors = {
-  Healthy: '#55d6a3',
-  Warning: '#ffc857',
-  'High Risk': '#ff9955',
-  Critical: '#ff6b5f'
-}
-
-const color =
-  statusColors[status] ?? '#55d6a3'
+            const statusColors = {
+              Healthy: '#55d6a3',
+              Warning: '#ffc857',
+              'High Risk': '#ff9955',
+              Critical: '#ff6b5f'
+            }
             return {
 
-              id: item.station?.id || 'Unknown',
+              id: item.station.id,
 
               city:
-                item.station?.city ||
-                item.station?.name ||
-                'Unknown',
+                item.station.city || item.station.name,
 
               region:
-                item.station?.region ||
-                item.station?.state ||
-                'Unknown',
+                item.station.region || item.station.state,
 
               lat:
-                Number(item.station?.latitude) || 0,
+                Number(item.station.latitude),
 
               lng:
-                Number(item.station?.longitude) || 0,
+                Number(item.station.longitude),
 
               status,
-              color,
-              risk,
+              color: statusColors[status],
+              risk: m4.risk_score,
 
-              temp:
-                Number(weather.temperature ?? 0),
+              temp: weather.temperature,
+              humidity: weather.humidity,
+              pressure: weather.pressure,
+              wind: weather.wind_speed,
+              rainfall: weather.rainfall,
 
-              humidity:
-                Number(weather.humidity ?? 0),
-
-              pressure:
-                Number(weather.pressure ?? 0),
-
-              wind:
-                Number(weather.wind_speed ?? 0),
-
-              rainfall:
-                Number(weather.rainfall ?? 0),
-
-              updated: 'Just now',
+              updated: item.timestamp,
 
               m2,
               m3,
               m4,
+              metadata: item.station,
+              weatherData: weather,
 
-              sensorHealth:
-                m4.sensor_health ?? 100,
+              sensorHealth: m4.sensor_health,
 
-              severity:
-                m4.severity ?? status,
+              severity: m4.severity,
 
-              explanation:
-                m4.explanation ??
-                m3.explanation ??
-                'No anomaly detected'
+              explanation: m4.explanation
             }
 
           })
-      : mockStations
+      : []
 
 
   // =====================================
   // ANOMALIES
   // =====================================
 
-  const anomalyRows = stations
-    .filter((station) => {
+  const anomalyRows = stations.flatMap((station) => {
+    const m3Anomalies = station.m3.filter((result) => result.anomaly)
+    const mlStatus = String(station.m2?.ml_status ?? '').toLowerCase()
+    const m2IsAnomaly = mlStatus.includes('anomaly')
 
-      const mlStatus = String(
-        station.m2?.ml_status ??
-        station.m2?.status ??
-        ''
-      ).toLowerCase()
+    if (m3Anomalies.length) {
+      return m3Anomalies.map((result) => ({
+        station: station.id,
+        city: station.city,
+        type: result.anomaly_type,
+        parameter: result.feature,
+        value: result.value,
+        expected: result.reason,
+        risk: station.m4?.risk_score,
+        confidence: station.m4?.confidence,
+        severity: station.m4?.severity,
+        status: mlStatus,
+        time: result.timestamp || station.updated,
+        description: station.m4?.explanation,
+        source: 'M3'
+      }))
+    }
 
-      const m4Anomaly =
-        String(
-          station.m4?.anomaly ??
-          station.m4?.status ??
-          ''
-        ).toLowerCase()
-
-      return (
-        mlStatus.includes('anomaly') ||
-        m4Anomaly.includes('anomaly') ||
-        station.status === 'Critical' ||
-        station.status === 'High Risk'
-      )
-    })
-    .map((station) => ({
-
-      station: station.id,
-
-      city: station.city,
-
-     type:
-  station.m4?.anomaly_type ??
-  station.m3?.anomaly_type ??
-  station.m2?.anomaly_type ??
-  'Weather Anomaly',
-
-     parameter:
-  station.m4?.parameter ??
-  station.m3?.parameter ??
-  station.m2?.parameter ??
-  'Multiple Parameters',
-
-      value:
-        station.m2?.detected_value ??
-        station.m3?.detected_value ??
-        `Risk ${station.risk}`,
-
-      expected:
-        station.m2?.expected_value ??
-        station.m3?.expected_value ??
-        'Normal weather pattern',
-
-      risk: station.risk,
-
-      severity: station.status,
-
-      time: station.updated,
-
-      description: station.explanation
-    }))
+    return m2IsAnomaly
+      ? [{
+          station: station.id,
+          city: station.city,
+          type: station.m2.anomaly_type,
+          parameter: station.m2.parameter,
+          value: station.m2.detected_value,
+          expected: station.m2.expected_value,
+          risk: station.m4?.risk_score,
+          confidence: station.m4?.confidence,
+          severity: station.m4?.severity,
+          status: station.m2.ml_status,
+          time: station.updated,
+          description: station.m4?.explanation,
+          source: 'M2'
+        }]
+      : []
+  })
 
 
   // =====================================
@@ -563,8 +313,7 @@ const color =
       station: station.id,
 
       type:
-        station.m2?.anomaly_type ??
-        'Weather Anomaly',
+        station.m2?.anomaly_type,
 
       severity: station.status,
 
@@ -572,8 +321,7 @@ const color =
 
       time: station.updated,
 
-      description: station.explanation,
-anomalyType: station.m4?.anomaly_type ?? station.m3?.anomaly_type ?? 'Weather Anomaly'
+      description: station.explanation
     }))
 
 
@@ -584,19 +332,7 @@ anomalyType: station.m4?.anomaly_type ?? station.m3?.anomaly_type ?? 'Weather An
   const criticalAnomalies =
     anomalyRows.length > 0
       ? anomalyRows
-      : [
-          {
-            station: 'SYSTEM',
-            city: 'Network',
-            type: 'No active anomaly',
-            parameter: 'All parameters',
-            value: 'Normal',
-            expected: 'Normal',
-            risk: 0,
-            severity: 'Healthy',
-            time: 'Just now'
-          }
-        ]
+      : []
 
 
   // =====================================
@@ -617,6 +353,110 @@ anomalyType: station.m4?.anomaly_type ?? station.m3?.anomaly_type ?? 'Weather An
 
 
   const activeAnomalies = anomalyRows.length
+
+  const selectedStation = stations.find(
+    (station) => station.id === selectedStationId
+  )
+
+
+  useEffect(() => {
+
+    const handlePopState = () => {
+      setSelectedStationId(null)
+      setActiveNav('Stations')
+      setAutoRotate(true)
+    }
+
+    window.addEventListener('popstate', handlePopState)
+
+    return () => window.removeEventListener('popstate', handlePopState)
+  }, [])
+
+
+  useEffect(() => {
+
+    if (!selectedStationId) {
+      setStationHistory([])
+      setHistoryError(null)
+      setHistoryParameter('temperature')
+      return undefined
+    }
+
+    const controller = new AbortController()
+
+    const fetchStationHistory = async () => {
+
+      try {
+        setHistoryLoading(true)
+        setHistoryError(null)
+
+        const response = await fetch(
+          `http://127.0.0.1:8000/history/${encodeURIComponent(selectedStationId)}`,
+          { signal: controller.signal }
+        )
+
+        if (!response.ok) {
+          throw new Error(`Failed to fetch station history: ${response.status}`)
+        }
+
+        const data = await response.json()
+        setStationHistory(Array.isArray(data.data) ? data.data : [])
+      } catch (err) {
+        if (err.name === 'AbortError') {
+          return
+        }
+        setStationHistory([])
+        setHistoryError(err.message)
+      } finally {
+        setHistoryLoading(false)
+      }
+    }
+
+    fetchStationHistory()
+
+    return () => controller.abort()
+  }, [selectedStationId])
+
+
+  useEffect(() => {
+
+    const stationId = stations[0]?.id
+
+    if (activeNav !== 'Dashboard' || selectedStationId || !stationId) {
+      return undefined
+    }
+
+    const controller = new AbortController()
+
+    const fetchDashboardHistory = async () => {
+      try {
+        setDashboardHistoryLoading(true)
+        setDashboardHistoryError(null)
+
+        const response = await fetch(
+          `http://127.0.0.1:8000/history/${encodeURIComponent(stationId)}`,
+          { signal: controller.signal }
+        )
+
+        if (!response.ok) {
+          throw new Error(`Failed to fetch dashboard history: ${response.status}`)
+        }
+
+        const data = await response.json()
+        setDashboardHistory(Array.isArray(data.data) ? data.data : [])
+      } catch (err) {
+        if (err.name === 'AbortError') return
+        setDashboardHistory([])
+        setDashboardHistoryError(err.message)
+      } finally {
+        setDashboardHistoryLoading(false)
+      }
+    }
+
+    fetchDashboardHistory()
+
+    return () => controller.abort()
+  }, [activeNav, selectedStationId, stations[0]?.id])
 
 
   // =====================================
@@ -806,9 +646,8 @@ anomalyType: station.m4?.anomaly_type ?? station.m3?.anomaly_type ?? 'Weather An
 
   const selectStation = (station) => {
 
-    setSelectedStation(station)
-
-    setActiveNav('Dashboard')
+    setSelectedStationId(station.id)
+    window.history.pushState({ stationId: station.id }, '', window.location.href)
 
     setAutoRotate(false)
 
@@ -1012,36 +851,14 @@ anomalyType: station.m4?.anomaly_type ?? station.m3?.anomaly_type ?? 'Weather An
 
                   )}
 
-              </button>
+                </button>
 
-            )
+              )
           )}
 
         </nav>
 
         <div className="sidebar-bottom">
-
-          <div className="operator">
-
-            <div className="avatar">
-              RK
-            </div>
-
-            <div>
-
-              <strong>
-                Riya Kapoor
-              </strong>
-
-              <small>
-                System operator
-              </small>
-
-            </div>
-
-            <ChevronDown size={14} />
-
-          </div>
 
           <div className="system-status">
 
@@ -1086,7 +903,7 @@ anomalyType: station.m4?.anomaly_type ?? station.m3?.anomaly_type ?? 'Weather An
                 /
               </span>
 
-              WESTERN INDIA GRID
+              AWS WEATHER NETWORK
 
             </div>
 
@@ -1100,29 +917,7 @@ anomalyType: station.m4?.anomaly_type ?? station.m3?.anomaly_type ?? 'Weather An
 
           </div>
 
-
           <div className="top-actions">
-
-            <div className="last-sync">
-
-              <span>
-                Last sync
-              </span>
-
-              <strong>
-
-                {loading
-                  ? 'Syncing...'
-                  : error
-                    ? 'Offline'
-                    : 'Live'}
-
-              </strong>
-
-              <i />
-
-            </div>
-
 
             <div className="global-search">
 
@@ -1230,7 +1025,6 @@ anomalyType: station.m4?.anomaly_type ?? station.m3?.anomaly_type ?? 'Weather An
 
               </button>
 
-
               {notificationsOpen && (
 
                 <NotificationPanel
@@ -1249,7 +1043,27 @@ anomalyType: station.m4?.anomaly_type ?? station.m3?.anomaly_type ?? 'Weather An
         </header>
 
 
-        {activeNav !== 'Dashboard' ? (
+        {selectedStation ? (
+
+          <StationDetailsView
+            station={selectedStation}
+            history={stationHistory}
+            historyLoading={historyLoading}
+            historyError={historyError}
+            historyParameter={historyParameter}
+            setHistoryParameter={setHistoryParameter}
+            onBack={() => {
+              if (window.history.state?.stationId) {
+                window.history.back()
+              } else {
+                setSelectedStationId(null)
+                setActiveNav('Stations')
+                setAutoRotate(true)
+              }
+            }}
+          />
+
+        ) : activeNav !== 'Dashboard' ? (
 
           <SecondaryView
             view={activeNav}
@@ -1265,6 +1079,10 @@ anomalyType: station.m4?.anomaly_type ?? station.m3?.anomaly_type ?? 'Weather An
             setLiveParameter={setLiveParameter}
             globeAnimation={globeAnimation}
             setGlobeAnimation={setGlobeAnimation}
+            stationSearchTerm={stationSearchTerm}
+            setStationSearchTerm={setStationSearchTerm}
+            stationStatusFilter={stationStatusFilter}
+            setStationStatusFilter={setStationStatusFilter}
           />
 
         ) : (
@@ -1477,29 +1295,14 @@ anomalyType: station.m4?.anomaly_type ?? station.m3?.anomaly_type ?? 'Weather An
 
               <aside className="right-panel">
 
-                {selectedStation ? (
-
-                  <StationPanel
-                    station={selectedStation}
-                    parameter={parameter}
-
-                    onClose={() => {
-
-                      setSelectedStation(null)
-
-                      setAutoRotate(true)
-
-                    }}
-                  />
-
-                ) : (
-
-                  <OverviewPanel
-                    parameter={parameter}
-                    current={current}
-                  />
-
-                )}
+                <OverviewPanel
+                  parameter={parameter}
+                  current={current}
+                  stations={stations}
+                  history={dashboardHistory}
+                  historyLoading={dashboardHistoryLoading}
+                  historyError={dashboardHistoryError}
+                />
 
               </aside>
 
@@ -1554,7 +1357,7 @@ anomalyType: station.m4?.anomaly_type ?? station.m3?.anomaly_type ?? 'Weather An
 
                             setParameter(name)
 
-                            setSelectedStation(null)
+                            setSelectedStationId(null)
 
                           }}
                         >
@@ -1577,22 +1380,24 @@ anomalyType: station.m4?.anomaly_type ?? station.m3?.anomaly_type ?? 'Weather An
               </div>
 
 
-              <AnomalyCard
-                anomaly={
-                  criticalAnomalies[
-                    criticalIndex %
-                    criticalAnomalies.length
-                  ]
-                }
-
-                onNext={() =>
-                  setCriticalIndex(
-                    (index) =>
-                      (index + 1) %
+              {criticalAnomalies.length > 0 && (
+                <AnomalyCard
+                  anomaly={
+                    criticalAnomalies[
+                      criticalIndex %
                       criticalAnomalies.length
-                  )
-                }
-              />
+                    ]
+                  }
+
+                  onNext={() =>
+                    setCriticalIndex(
+                      (index) =>
+                        (index + 1) %
+                        criticalAnomalies.length
+                    )
+                  }
+                />
+              )}
 
             </section>
 
@@ -1624,14 +1429,12 @@ function SecondaryView({
   globeAnimation,
   setGlobeAnimation,
   liveParameter,
-  setLiveParameter
+  setLiveParameter,
+  stationSearchTerm,
+  setStationSearchTerm,
+  stationStatusFilter,
+  setStationStatusFilter
 }) {
-
-  const [searchTerm, setSearchTerm] =
-    useState('')
-
-  const [statusFilter, setStatusFilter] =
-    useState('All')
 
   const [alertFilter, setAlertFilter] =
     useState('All')
@@ -1676,14 +1479,14 @@ function SecondaryView({
         `${station.id} ${station.city} ${station.region}`
           .toLowerCase()
           .includes(
-            searchTerm.toLowerCase()
+            stationSearchTerm.toLowerCase()
           )
 
       return (
         matchesSearch &&
         (
-          statusFilter === 'All' ||
-          station.status === statusFilter
+          stationStatusFilter === 'All' ||
+          station.status === stationStatusFilter
         )
       )
 
@@ -1717,10 +1520,10 @@ function SecondaryView({
     return (
       <StationsView
         stations={filteredStations}
-        searchTerm={searchTerm}
-        setSearchTerm={setSearchTerm}
-        statusFilter={statusFilter}
-        setStatusFilter={setStatusFilter}
+        searchTerm={stationSearchTerm}
+        setSearchTerm={setStationSearchTerm}
+        statusFilter={stationStatusFilter}
+        setStatusFilter={setStationStatusFilter}
         selectStation={selectStation}
       />
     )
@@ -1752,12 +1555,6 @@ function SecondaryView({
 
   }
 
-
-  if (view === 'Reports') {
-
-    return <ReportsView />
-
-  }
 
 
   if (view === 'System Health') {
@@ -1882,11 +1679,7 @@ function LiveDataView({
 
                     <strong>
 
-                      {stationValue(
-                        station,
-                        name,
-                        tick
-                      )}
+                      {stationValue(station, name)}
 
                     </strong>
 
@@ -1937,21 +1730,22 @@ function LiveDataView({
 
 function stationValue(
   station,
-  name,
-  tick
+  name
 ) {
 
-  const value =
-    name === 'Temperature'
-      ? station.temp +
-        (tick % 2 ? 0.1 : 0)
-      : name === 'Humidity'
-        ? station.humidity
-        : name === 'Wind'
-          ? station.wind
-          : name === 'Rainfall'
-            ? station.rainfall
-            : station.pressure
+  const weatherKey = {
+    Temperature: 'temperature',
+    Humidity: 'humidity',
+    Wind: 'wind_speed',
+    Rainfall: 'rainfall',
+    Pressure: 'pressure'
+  }[name]
+
+  const value = station.weatherData?.[weatherKey]
+
+  if (value === undefined || value === null) {
+    return value
+  }
 
   return name === 'Temperature'
     ? Number(value).toFixed(1)
@@ -2433,14 +2227,18 @@ function AnomaliesView({
 
         <div className="table-row table-header">
 
-         <span>Station</span>
-<span>Type</span>
-<span>Parameter</span>
-<span>Detected Value</span>
-<span>Expected Value</span>
-<span>Risk Score</span>
-<span>Severity</span>
-<span>Explanation</span>
+          <span>Station</span>
+          <span>Location</span>
+          <span>Type</span>
+          <span>Parameter</span>
+          <span>Detected Value</span>
+          <span>Expected Value</span>
+          <span>Risk Score</span>
+          <span>Confidence</span>
+          <span>Severity</span>
+          <span>Status</span>
+          <span>Timestamp</span>
+          <span>Explanation</span>
 
         </div>
 
@@ -2464,6 +2262,8 @@ function AnomaliesView({
                   </strong>
                 </span>
 
+                <span>{anomaly.city}</span>
+
                 <span>
                   {anomaly.type}
                 </span>
@@ -2484,6 +2284,8 @@ function AnomaliesView({
                   {anomaly.risk}/100
                 </span>
 
+                <span>{anomaly.confidence}</span>
+
                 <span>
 
                   <StatusPill
@@ -2493,6 +2295,12 @@ function AnomaliesView({
                   />
 
                 </span>
+
+                <span>{anomaly.status}</span>
+
+                <span>{anomaly.time}</span>
+
+                <span className="alert-description">{anomaly.description}</span>
 
               </div>
 
@@ -2506,44 +2314,6 @@ function AnomaliesView({
           </div>
 
         )}
-
-      </div>
-
-    </div>
-  )
-}
-
-
-// =====================================
-// REPORTS
-// =====================================
-
-function ReportsView() {
-
-  return (
-
-    <div className="secondary-view">
-
-      <ViewHeader
-        eyebrow="OPERATIONAL REPORTING"
-        title="Reports"
-      />
-
-      <div className="report-grid">
-
-        <StatCard
-          label="Stations monitored"
-          value="250"
-          tone="cyan"
-          icon={Globe2}
-        />
-
-        <StatCard
-          label="Total anomalies"
-          value="12"
-          tone="red"
-          icon={Zap}
-        />
 
       </div>
 
@@ -2644,14 +2414,38 @@ function SettingsView({
     <div className="secondary-view">
 
       <ViewHeader
-        eyebrow="OPERATOR PREFERENCES"
+        eyebrow="AWS ANOMALY DETECTION SYSTEM"
         title="Settings"
       />
 
       <div className="settings-panel">
 
+        <div className="setting-row">
+          <div>
+            <strong>Backend API</strong>
+            <small>Live data source: /predict/live</small>
+          </div>
+          <span className="setting-status">Connected through live polling</span>
+        </div>
+
+        <div className="setting-row">
+          <div>
+            <strong>M2 / M3 / M4 pipeline</strong>
+            <small>Isolation Forest, rule engine, and M4 risk and health processing</small>
+          </div>
+          <span className="setting-status">Backend managed</span>
+        </div>
+
+        <div className="setting-row">
+          <div>
+            <strong>Weather monitoring</strong>
+            <small>Temperature, humidity, pressure, wind speed, and rainfall</small>
+          </div>
+          <span className="setting-status">Live station telemetry</span>
+        </div>
+
         <SettingToggle
-          label="Light theme"
+          label="Light interface theme"
           checked={
             theme === 'light'
           }
@@ -2832,10 +2626,27 @@ function AboutView({
 
 function OverviewPanel({
   parameter,
-  current
+  current,
+  stations,
+  history,
+  historyLoading,
+  historyError
 }) {
 
   const Icon = current.icon
+  const values = stations
+    .map((station) => stationValue(station, parameter))
+    .filter((value) => value !== undefined && value !== null)
+  const average = values.length
+    ? values.reduce((total, value) => total + Number(value), 0) / values.length
+    : null
+  const historyKey = {
+    Temperature: 'temperature',
+    Humidity: 'humidity',
+    Wind: 'wind_speed',
+    Rainfall: 'rainfall',
+    Pressure: 'pressure'
+  }[parameter]
 
   return (
 
@@ -2872,12 +2683,12 @@ function OverviewPanel({
         <div>
 
           <span>
-            Current average
+            Live average
           </span>
 
           <strong>
 
-            {current.value}
+            {average === null ? '—' : average.toFixed(parameter === 'Temperature' || parameter === 'Rainfall' ? 1 : 0)}
 
             <em>
               {current.unit}
@@ -2888,12 +2699,6 @@ function OverviewPanel({
         </div>
 
       </div>
-
-
-      <MiniChart
-        data={current.chart}
-        color={current.color}
-      />
 
 
       <div className="insight-box">
@@ -2909,11 +2714,33 @@ function OverviewPanel({
           </span>
 
           <p>
-            {current.insight}
+            {stations.length ? `${stations.length} stations reporting live ${parameter.toLowerCase()} data` : 'Waiting for live station data'}
           </p>
 
         </div>
 
+      </div>
+
+      <div className="dashboard-history-chart">
+        <div className="dashboard-history-heading">
+          <span className="section-kicker">LIVE HISTORY · API DATA</span>
+          <small>{stations[0]?.id}</small>
+        </div>
+        {historyLoading ? (
+          <div className="dashboard-chart-empty">Loading history...</div>
+        ) : historyError ? (
+          <div className="dashboard-chart-empty">{historyError}</div>
+        ) : history.length ? (
+          <TrendChart
+            title={parameter}
+            unit={current.unit}
+            history={history}
+            valueKey={historyKey}
+            group="weather_data"
+          />
+        ) : (
+          <div className="dashboard-chart-empty">No historical data available</div>
+        )}
       </div>
 
     </div>
@@ -2925,108 +2752,265 @@ function OverviewPanel({
 // STATION PANEL
 // =====================================
 
-function StationPanel({
+function StationDetailsView({
   station,
-  parameter,
-  onClose
+  onBack,
+  history,
+  historyLoading,
+  historyError,
+  historyParameter,
+  setHistoryParameter
 }) {
+
+  const historySeries = [
+    ['temperature', 'Temperature', '°C', 'weather_data'],
+    ['humidity', 'Humidity', '%', 'weather_data'],
+    ['wind_speed', 'Wind Speed', 'km/h', 'weather_data'],
+    ['rainfall', 'Rainfall', 'mm', 'weather_data'],
+    ['pressure', 'Pressure', 'hPa', 'weather_data'],
+    ['risk_score', 'Risk Score', '', 'm4'],
+    ['sensor_health', 'Health Score', '', 'm4']
+  ].filter(([key, , , group]) => history.some((entry) => (
+    Number.isFinite(Number(entry[group]?.[key]))
+  )))
+
+  const activeSeries = historySeries.find(([key]) => key === historyParameter) || historySeries[0]
 
   return (
 
-    <div className="panel-content station-detail">
+    <div className="station-details-page">
 
-      <div className="panel-heading">
+      <button className="back-stations-button" onClick={onBack}>
+        <ArrowUpRight size={15} style={{ transform: 'rotate(225deg)' }} />
+        Stations <span aria-hidden="true">›</span> {station.id}
+      </button>
+
+      <div className="station-details-header">
 
         <div>
 
           <span className="section-kicker">
-
-            STATION INSPECTION ·
-            {' '}
-            {parameter.toUpperCase()}
-
+            STATION DETAILS
           </span>
 
           <h2>
             {station.id}
           </h2>
 
+          <div className="station-details-location">
+            <Globe2 size={15} />
+            {station.city}, {station.region}
+          </div>
+
+          <div className="station-details-meta">
+            <span>Station ID: {station.id}</span>
+            <span>Last updated: {station.updated}</span>
+          </div>
+
+          {(station.metadata.latitude !== undefined || station.metadata.longitude !== undefined) && (
+            <div className="station-details-coordinates">
+              {station.metadata.latitude}, {station.metadata.longitude}
+            </div>
+          )}
+
         </div>
 
-        <button
-          className="close-button"
-          onClick={onClose}
-        >
-
-          <X size={16} />
-
-        </button>
+        <div className="station-details-status">
+          <StatusPill status={station.status} />
+          <span>Updated {station.updated}</span>
+        </div>
 
       </div>
 
+      <div className="station-details-grid">
 
-      <div className="station-location">
+        <section className="station-details-card station-weather-card">
+          <div className="station-details-card-heading">
+            <span className="section-kicker">CURRENT WEATHER</span>
+            <h3>Live parameters</h3>
+          </div>
+          <div className="station-weather-grid">
+            {Object.entries(station.weatherData).map(([key, value]) => (
+              <Reading key={key} label={key} value={value} />
+            ))}
+          </div>
+        </section>
 
-        <Globe2 size={15} />
+        <section className="station-details-card station-health-card">
+          <div className="station-details-card-heading">
+            <span className="section-kicker">OVERALL HEALTH</span>
+            <h3>Station health</h3>
+          </div>
+          <HealthBar value={station.m4.sensor_health} />
+          <StatusPill status={station.status} />
+        </section>
 
-        {station.city},
-        {' '}
-        {station.region}
+        <section className="station-details-card station-anomaly-card">
+          <div className="station-details-card-heading">
+            <span className="section-kicker">ANOMALY DETECTION</span>
+            <h3>Current analysis</h3>
+          </div>
+          <div className="m4-grid">
+            <DetailField label="Risk score" value={station.m4.risk_score} />
+            <DetailField label="Confidence" value={station.m4.confidence} />
+            <DetailField label="Severity" value={station.m4.severity} />
+            <DetailField label="Health score" value={station.m4.sensor_health} />
+            <DetailField label="Anomaly status" value={station.m2.ml_status} />
+            <div className="detail-field detail-field-wide">
+              <span>Explanation</span>
+              <strong>{station.m4.explanation}</strong>
+            </div>
+          </div>
+        </section>
 
-        <StatusPill
-          status={station.status}
-        />
+        <section className="station-details-card station-feature-card">
+          <div className="station-details-card-heading">
+            <span className="section-kicker">FEATURE HEALTH</span>
+            <h3>Parameter health</h3>
+          </div>
+          <FeatureHealthTable
+            featureHealth={station.m4.feature_health}
+            weatherData={station.weatherData}
+          />
+        </section>
 
+        <section className="station-details-card station-history-card">
+          <div className="station-details-card-heading">
+            <span className="section-kicker">HISTORICAL TRENDS</span>
+            <h3>Station behavior over time</h3>
+          </div>
+          {historyLoading ? (
+            <div className="station-history-empty">Loading station history...</div>
+          ) : historyError ? (
+            <div className="station-history-empty">{historyError}</div>
+          ) : history.length ? (
+            <div className="history-analysis">
+              <div className="history-controls">
+                <span>Historical parameter</span>
+                <select value={activeSeries?.[0] || ''} onChange={(event) => setHistoryParameter(event.target.value)}>
+                  {historySeries.map(([key, title]) => <option key={key} value={key}>{title}</option>)}
+                </select>
+              </div>
+              {activeSeries ? (
+                <TrendChart title={activeSeries[1]} unit={activeSeries[2]} history={history} valueKey={activeSeries[0]} group={activeSeries[3]} />
+              ) : (
+                <div className="station-history-empty">No supported historical series available.</div>
+              )}
+            </div>
+          ) : (
+            <div className="station-history-empty">No historical data available for this station.</div>
+          )}
+        </section>
+
+        <section className="station-details-card station-events-card">
+          <div className="station-details-card-heading">
+            <span className="section-kicker">ALERTS AND EVENTS</span>
+            <h3>Station event timeline</h3>
+          </div>
+          <StationEvents history={history} />
+        </section>
       </div>
 
+    </div>
+  )
+}
 
-      <div className="station-risk">
 
-        <span>
-          Risk score
-        </span>
+function TrendChart({ title, unit, history, valueKey, group }) {
 
-        <strong>
-          {station.risk}/100
-        </strong>
+  const points = history
+    .map((entry, index) => ({
+      timestamp: entry.timestamp,
+      value: Number(group ? entry[group]?.[valueKey] : entry.weather_data?.[valueKey])
+    }))
+    .filter((point) => Number.isFinite(point.value))
+    .map((point, index) => ({ ...point, index }))
 
+  if (!points.length) {
+    return (
+      <div className="trend-card trend-empty">
+        <strong>{title}</strong>
+        <span>No historical data</span>
       </div>
+    )
+  }
 
+  const width = 320
+  const height = 130
+  const padding = { top: 16, right: 12, bottom: 28, left: 34 }
+  const min = Math.min(...points.map((point) => point.value))
+  const max = Math.max(...points.map((point) => point.value))
+  const spread = max - min || 1
+  const x = (index) => padding.left + (index / Math.max(points.length - 1, 1)) * (width - padding.left - padding.right)
+  const y = (value) => padding.top + (1 - (value - min) / spread) * (height - padding.top - padding.bottom)
+  const line = points.map((point) => `${x(point.index)},${y(point.value)}`).join(' ')
 
-      <div className="station-readings">
-
-        <Reading
-          label="Temperature"
-          value={`${station.temp}°C`}
-          icon={Thermometer}
-        />
-
-        <Reading
-          label="Humidity"
-          value={`${station.humidity}%`}
-          icon={CloudSun}
-        />
-
-        <Reading
-          label="Pressure"
-          value={`${station.pressure} hPa`}
-          icon={Gauge}
-        />
-
-        <Reading
-          label="Wind speed"
-          value={`${station.wind} km/h`}
-          icon={Wind}
-        />
-
-        <Reading
-          label="Rainfall"
-          value={`${station.rainfall} mm`}
-          icon={CloudRain}
-        />
-
+  return (
+    <div className="trend-card">
+      <div className="trend-card-heading">
+        <strong>{title}</strong>
+        <span>{unit}</span>
       </div>
+      <svg className="trend-chart" viewBox={`0 0 ${width} ${height}`} role="img" aria-label={`${title} trend`}>
+        <line x1={padding.left} y1={height - padding.bottom} x2={width - padding.right} y2={height - padding.bottom} className="trend-axis" />
+        <line x1={padding.left} y1={padding.top} x2={padding.left} y2={height - padding.bottom} className="trend-axis" />
+        <polyline points={line} className="trend-line" />
+        {points.map((point) => (
+          <circle key={`${point.timestamp}-${point.index}`} cx={x(point.index)} cy={y(point.value)} r="3" className="trend-point">
+            <title>{`${new Date(point.timestamp).toLocaleString()} · ${point.value}${unit}`}</title>
+          </circle>
+        ))}
+        <text x={padding.left} y={height - 8} className="trend-label">{new Date(points[0].timestamp).toLocaleTimeString()}</text>
+        <text x={width - padding.right} y={height - 8} textAnchor="end" className="trend-label">{new Date(points[points.length - 1].timestamp).toLocaleTimeString()}</text>
+        <text x="4" y={padding.top + 4} className="trend-label">{max}</text>
+        <text x="4" y={height - padding.bottom} className="trend-label">{min}</text>
+      </svg>
+    </div>
+  )
+}
 
+
+function StationEvents({ history }) {
+
+  const events = history.flatMap((entry) => (
+    Array.isArray(entry.m3)
+      ? entry.m3.filter((event) => event.anomaly).map((event) => ({
+          ...event,
+          timestamp: event.timestamp || entry.timestamp
+        }))
+      : []
+  ))
+
+  if (!events.length) {
+    return <div className="station-history-empty">No station events available.</div>
+  }
+
+  return (
+    <div className="station-events-list">
+      {events.map((event, index) => (
+        <div className="station-event" key={`${event.timestamp}-${index}`}>
+          <span>{event.timestamp}</span>
+          <strong>{event.anomaly_type || event.feature}</strong>
+          <p>{event.reason || event.value}</p>
+        </div>
+      ))}
+    </div>
+  )
+}
+
+
+function HealthBar({ value }) {
+
+  const numericValue = Number(value)
+  const hasValue = Number.isFinite(numericValue)
+
+  return (
+    <div className="health-bar">
+      <div className="health-bar-track">
+        {hasValue && <span style={{ width: `${Math.max(0, Math.min(100, numericValue))}%` }} />}
+      </div>
+      <strong>{hasValue ? numericValue : ''}</strong>
+      <small>Health Score</small>
     </div>
   )
 }
@@ -3038,9 +3022,17 @@ function StationPanel({
 
 function Reading({
   label,
-  value,
-  icon: Icon
+  value
 }) {
+
+  const weatherDisplay = {
+    temperature: ['Temperature', Thermometer, '°C'],
+    humidity: ['Humidity', CloudSun, '%'],
+    pressure: ['Pressure', Gauge, 'hPa'],
+    wind_speed: ['Wind Speed', Wind, 'km/h'],
+    rainfall: ['Rainfall', CloudRain, 'mm']
+  }
+  const [displayLabel, Icon, unit] = weatherDisplay[label] || [label, Activity, '']
 
   return (
 
@@ -3051,15 +3043,81 @@ function Reading({
       <div>
 
         <span>
-          {label}
+          {displayLabel}
         </span>
 
         <strong>
-          {value}
+          {value}{unit}
         </strong>
 
       </div>
 
+    </div>
+  )
+}
+
+
+function DetailField({ label, value }) {
+
+  const displayValue = value !== null && typeof value === 'object'
+    ? Object.entries(value).map(([key, item]) => `${key}: ${item}`).join(' · ')
+    : String(value)
+
+  return (
+    <div className="detail-field">
+      <span>{label}</span>
+      <strong>{displayValue}</strong>
+    </div>
+  )
+}
+
+
+function FeatureHealthTable({ featureHealth, weatherData }) {
+
+  if (!featureHealth || typeof featureHealth !== 'object') {
+    return null
+  }
+
+  const weatherLabels = {
+    temperature: 'Temperature',
+    humidity: 'Humidity',
+    pressure: 'Pressure',
+    wind_speed: 'Wind Speed',
+    rainfall: 'Rainfall'
+  }
+
+  return (
+    <div className="feature-health-table">
+      {Object.entries(featureHealth).map(([feature, health]) => (
+        <FeatureHealthRow
+          key={feature}
+          feature={feature}
+          health={health}
+          currentValue={weatherData?.[feature]}
+          label={weatherLabels[feature] || feature}
+        />
+      ))}
+    </div>
+  )
+}
+
+
+function FeatureHealthRow({ feature, health, currentValue, label }) {
+
+  const numericHealth = Number(health?.value ?? health)
+  const hasHealth = Number.isFinite(numericHealth)
+
+  return (
+    <div className="feature-health-row" data-feature={feature}>
+          <div className="feature-health-label">
+            <span>{label}</span>
+            <small>{currentValue}</small>
+          </div>
+          <div className="feature-health-track">
+            {hasHealth && <span style={{ width: `${Math.max(0, Math.min(100, numericHealth))}%` }} />}
+          </div>
+          <strong>{hasHealth ? numericHealth : ''}</strong>
+          <small>{health?.status ?? ''}</small>
     </div>
   )
 }
