@@ -18,10 +18,8 @@ FEATURES = [
 ]
 
 
-# Health penalty for different problems
+# Health penalty for different sensor/rule problems
 HEALTH_PENALTY = {
-
-    "ML_ANOMALY": 2,
 
     "TIMESTAMP_GAP": 3,
 
@@ -46,19 +44,25 @@ def update_health(
     rule_anomaly_type: Optional[str]
 ):
     """
-    Update health score.
+    Update station/sensor health.
+
+    Normal readings recover health slowly.
+
+    ML anomaly causes a small health reduction
+    because the reading is unusual.
+
+    Rule-based anomalies cause larger penalties
+    because they indicate possible sensor/data problems.
 
     Health is always between 0 and 100.
     """
 
     penalty = 0
 
-    # ML anomaly
-    if ml_anomaly:
+    # ---------------------------------
+    # RULE ANOMALY
+    # ---------------------------------
 
-        penalty += HEALTH_PENALTY["ML_ANOMALY"]
-
-    # Rule anomaly
     if rule_anomaly and rule_anomaly_type:
 
         rules = [
@@ -74,12 +78,27 @@ def update_health(
         ]
 
         if penalties:
-
-            # Use strongest penalty
+            # Use strongest rule penalty
             penalty += max(penalties)
 
-    # Normal reading → slight recovery
+
+    # ---------------------------------
+    # ML ANOMALY
+    # ---------------------------------
+
+    ML_ANOMALY_PENALTY = 2
+
+    if ml_anomaly and penalty == 0:
+        penalty = ML_ANOMALY_PENALTY
+
+
+    # ---------------------------------
+    # HEALTH UPDATE
+    # ---------------------------------
+
     if penalty == 0:
+
+        # Normal reading → gradual recovery
 
         new_health = (
             previous_health
@@ -88,13 +107,25 @@ def update_health(
 
     else:
 
+        # Anomaly → reduce health
+
         new_health = (
             previous_health
             - penalty
         )
 
-    # Keep between 0 and 100
+
+    # ---------------------------------
+    # KEEP HEALTH BETWEEN 0 AND 100
+    # ---------------------------------
+
     return round(
-        max(0, min(100, new_health)),
+        max(
+            0,
+            min(
+                100,
+                new_health
+            )
+        ),
         2
     )

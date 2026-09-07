@@ -6,10 +6,8 @@ import {
   Activity,
   AlertTriangle,
   ArrowUpRight,
-  BarChart3,
   Bell,
   Check,
-  ChevronDown,
   CircleHelp,
   CloudRain,
   CloudSun,
@@ -39,120 +37,380 @@ import './styles.css'
 // =====================================
 
 const mockStations = [
-  {
-    id: 'AWS_001',
-    city: 'Pune',
-    region: 'Maharashtra',
-    lat: 18.52,
-    lng: 73.86,
-    status: 'Warning',
-    color: '#ffc857',
-    risk: 62,
-    temp: 31.4,
-    humidity: 68,
-    pressure: 1009,
-    wind: 14,
-    rainfall: 2.4,
-    updated: '2 min ago'
-  },
-  {
-    id: 'AWS_002',
-    city: 'Mumbai',
-    region: 'Maharashtra',
-    lat: 19.07,
-    lng: 72.87,
-    status: 'Healthy',
-    color: '#55d6a3',
-    risk: 24,
-    temp: 29.8,
-    humidity: 78,
-    pressure: 1011,
-    wind: 19,
-    rainfall: 4.8,
-    updated: '1 min ago'
-  },
-  {
-    id: 'AWS_003',
-    city: 'Nashik',
-    region: 'Maharashtra',
-    lat: 20.01,
-    lng: 73.78,
-    status: 'Critical',
-    color: '#ff6b5f',
-    risk: 92,
-    temp: 39.6,
-    humidity: 42,
-    pressure: 997,
-    wind: 31,
-    rainfall: 0,
-    updated: '4 min ago'
-  },
-  {
-    id: 'AWS_004',
-    city: 'Delhi',
-    region: 'NCT Delhi',
-    lat: 28.61,
-    lng: 77.21,
-    status: 'High Risk',
-    color: '#ff9955',
-    risk: 74,
-    temp: 35.2,
-    humidity: 54,
-    pressure: 1004,
-    wind: 22,
-    rainfall: 0.8,
-    updated: '3 min ago'
-  },
-  {
-    id: 'AWS_005',
-    city: 'Bengaluru',
-    region: 'Karnataka',
-    lat: 12.97,
-    lng: 77.59,
-    status: 'Healthy',
-    color: '#55d6a3',
-    risk: 18,
-    temp: 24.7,
-    humidity: 74,
-    pressure: 1014,
-    wind: 11,
-    rainfall: 6.2,
-    updated: '1 min ago'
-  },
-  {
-    id: 'AWS_006',
-    city: 'Kolkata',
-    region: 'West Bengal',
-    lat: 22.57,
-    lng: 88.36,
-    status: 'Warning',
-    color: '#ffc857',
-    risk: 58,
-    temp: 30.9,
-    humidity: 81,
-    pressure: 1008,
-    wind: 17,
-    rainfall: 8.9,
-    updated: '5 min ago'
-  },
-  {
-    id: 'AWS_007',
-    city: 'Jaipur',
-    region: 'Rajasthan',
-    lat: 26.91,
-    lng: 75.78,
-    status: 'Healthy',
-    color: '#55d6a3',
-    risk: 27,
-    temp: 37.1,
-    humidity: 31,
-    pressure: 1002,
-    wind: 26,
-    rainfall: 0,
-    updated: '2 min ago'
-  }
+  { id: 'AWS_001', city: 'Pune', region: 'Maharashtra', lat: 18.52, lng: 73.86, status: 'Warning', color: '#ffc857', risk: 62, temp: 31.4, humidity: 68, pressure: 1009, wind: 14, rainfall: 2.4, updated: '2 min ago', m2: {}, m3: [], m4: {}, sensorHealth: 92, severity: 'MEDIUM', explanation: 'Fallback demonstration station.' },
+  { id: 'AWS_002', city: 'Mumbai', region: 'Maharashtra', lat: 19.07, lng: 72.87, status: 'Healthy', color: '#55d6a3', risk: 24, temp: 29.8, humidity: 78, pressure: 1011, wind: 19, rainfall: 4.8, updated: '1 min ago', m2: {}, m3: [], m4: {}, sensorHealth: 96, severity: 'LOW', explanation: 'Fallback demonstration station.' },
+  { id: 'AWS_003', city: 'Nashik', region: 'Maharashtra', lat: 20.01, lng: 73.78, status: 'Critical', color: '#ff6b5f', risk: 92, temp: 39.6, humidity: 42, pressure: 997, wind: 31, rainfall: 0, updated: '4 min ago', m2: {}, m3: [], m4: {}, sensorHealth: 61, severity: 'CRITICAL', explanation: 'Fallback demonstration station.' },
+  { id: 'AWS_004', city: 'Delhi', region: 'NCT Delhi', lat: 28.61, lng: 77.21, status: 'High Risk', color: '#ff9955', risk: 74, temp: 35.2, humidity: 54, pressure: 1004, wind: 22, rainfall: 0.8, updated: '3 min ago', m2: {}, m3: [], m4: {}, sensorHealth: 76, severity: 'VERY HIGH', explanation: 'Fallback demonstration station.' },
+  { id: 'AWS_005', city: 'Bengaluru', region: 'Karnataka', lat: 12.97, lng: 77.59, status: 'Healthy', color: '#55d6a3', risk: 18, temp: 24.7, humidity: 74, pressure: 1014, wind: 11, rainfall: 6.2, updated: '1 min ago', m2: {}, m3: [], m4: {}, sensorHealth: 98, severity: 'LOW', explanation: 'Fallback demonstration station.' },
+  { id: 'AWS_006', city: 'Kolkata', region: 'West Bengal', lat: 22.57, lng: 88.36, status: 'Warning', color: '#ffc857', risk: 58, temp: 30.9, humidity: 81, pressure: 1008, wind: 17, rainfall: 8.9, updated: '5 min ago', m2: {}, m3: [], m4: {}, sensorHealth: 88, severity: 'MEDIUM', explanation: 'Fallback demonstration station.' },
+  { id: 'AWS_007', city: 'Jaipur', region: 'Rajasthan', lat: 26.91, lng: 75.78, status: 'Healthy', color: '#55d6a3', risk: 27, temp: 37.1, humidity: 31, pressure: 1002, wind: 26, rainfall: 0, updated: '2 min ago', m2: {}, m3: [], m4: {}, sensorHealth: 94, severity: 'LOW', explanation: 'Fallback demonstration station.' }
 ]
 
+const fallbackStations = mockStations.map((station) => ({
+  ...station,
+  metadata: {
+    latitude: station.lat,
+    longitude: station.lng,
+  },
+  weatherData: {
+    temperature: station.temp,
+    humidity: station.humidity,
+    pressure: station.pressure,
+    wind_speed: station.wind,
+    rainfall: station.rainfall,
+  },
+}))
+
+function normalizeM3(value) {
+  if (Array.isArray(value)) {
+    return value;
+  }
+
+  if (value && typeof value === "object") {
+    return [value];
+  }
+
+  return [];
+}
+
+
+/* =========================================================
+   GET ALL ANOMALY DETAILS
+   ========================================================= */
+
+function getAnomalyDetails(station) {
+  const m3 =
+    station?.m3 ||
+    station?.prediction?.m3 ||
+    {};
+
+  /* Backend details[] has the actual
+     parameter-wise values */
+
+  if (
+    Array.isArray(m3?.details) &&
+    m3.details.length > 0
+  ) {
+    return m3.details.filter(
+      (item) => item?.anomaly
+    );
+  }
+
+  /* Fallback if details[] is not available */
+
+  const items = normalizeM3(m3);
+
+  return items.filter(
+    (item) => item?.anomaly
+  );
+}
+
+
+/* =========================================================
+   FORMAT PARAMETERS
+   ========================================================= */
+
+function getParameters(station) {
+  const details = getAnomalyDetails(station);
+
+  const parameters = [];
+
+  details.forEach((item) => {
+
+    let feature = item?.feature;
+
+    if (Array.isArray(feature)) {
+      feature.forEach((f) => {
+        if (f && !parameters.includes(f)) {
+          parameters.push(f);
+        }
+      });
+    } else if (
+      feature &&
+      !parameters.includes(feature)
+    ) {
+      parameters.push(feature);
+    }
+
+  });
+
+  return parameters;
+}
+
+
+/* =========================================================
+   GET DETECTED VALUES
+   ========================================================= */
+
+function getDetectedValues(station) {
+  const details = getAnomalyDetails(station);
+
+  if (!details.length) {
+    return "—";
+  }
+
+  const values = [];
+
+  details.forEach((item) => {
+
+    const feature = item?.feature;
+    const value = item?.value;
+
+    if (
+      Array.isArray(feature) &&
+      Array.isArray(value)
+    ) {
+      feature.forEach((f, index) => {
+        values.push(
+          `${formatFeatureName(f)}: ${
+            value[index] ?? "—"
+          }`
+        );
+      });
+
+      return;
+    }
+
+    if (Array.isArray(feature)) {
+      feature.forEach((f) => {
+        values.push(
+          `${formatFeatureName(f)}: ${
+            value ?? "—"
+          }`
+        );
+      });
+
+      return;
+    }
+
+    if (feature) {
+      values.push(
+        `${formatFeatureName(feature)}: ${
+          value ?? "—"
+        }`
+      );
+    }
+  });
+
+  return values.length
+    ? values.join(" • ")
+    : "—";
+}
+
+
+/* =========================================================
+   FEATURE NAME
+   ========================================================= */
+
+function formatFeatureName(feature) {
+
+  const names = {
+    temperature: "Temperature",
+    humidity: "Humidity",
+    pressure: "Pressure",
+    wind_speed: "Wind Speed",
+    rainfall: "Rainfall",
+    timestamp: "Timestamp",
+  };
+
+  return (
+    names[feature] ||
+    String(feature || "")
+      .replace(/_/g, " ")
+      .replace(/\b\w/g, (c) =>
+        c.toUpperCase()
+      )
+  );
+}
+
+
+/* =========================================================
+   EXPECTED VALUE
+   ========================================================= */
+
+function getExpectedValue(station) {
+
+  const details = getAnomalyDetails(station);
+
+  if (!details.length) {
+    return "—";
+  }
+
+  const types = [
+    ...new Set(
+      details
+        .map(
+          (item) =>
+            item?.anomaly_type
+        )
+        .filter(Boolean)
+    ),
+  ];
+
+  if (
+    types.includes("FROZEN_VALUE")
+  ) {
+    return "Variable reading";
+  }
+
+  if (
+    types.includes("SPIKE")
+  ) {
+    return "Within normal variation";
+  }
+
+  if (
+    types.includes("DRIFT")
+  ) {
+    return "Stable baseline";
+  }
+
+  if (
+    types.includes("MISSING_DATA")
+  ) {
+    return "Value required";
+  }
+
+  return "—";
+}
+
+
+/* =========================================================
+   GET ANOMALY TYPE
+   ========================================================= */
+
+function getTableAnomalyType(station) {
+
+  const details =
+    getAnomalyDetails(station);
+
+  const types = [
+    ...new Set(
+      details
+        .map(
+          (item) =>
+            item?.anomaly_type
+        )
+        .filter(
+          (type) =>
+            type &&
+            type !== "NORMAL"
+        )
+    ),
+  ];
+
+  return types.length
+    ? types.join(", ")
+    : "NORMAL";
+}
+
+
+/* =========================================================
+   GET EXPLANATION
+   ========================================================= */
+
+function getAnomalyExplanation(station) {
+
+  const details =
+    getAnomalyDetails(station);
+
+  if (details.length) {
+
+    const reasons = details
+      .map(
+        (item) =>
+          item?.reason
+      )
+      .filter(Boolean);
+
+    if (reasons.length) {
+      return reasons.join(" | ");
+    }
+  }
+
+  return (
+    station?.m4?.explanation ||
+    "No anomaly detected."
+  );
+}
+
+
+/* =========================================================
+   GET TIMESTAMP
+   ========================================================= */
+
+function getAnomalyTimestamp(station) {
+
+  const details =
+    getAnomalyDetails(station);
+
+  const timestamp =
+    details.find(
+      (item) =>
+        item?.timestamp
+    )?.timestamp ||
+    station?.timestamp;
+
+  return timestamp;
+}
+
+
+
+function getDetectedParameter(station, anomaly = {}) {
+  if (anomaly?.feature) {
+    return anomaly.feature
+  }
+
+  if (station?.m2?.parameter) {
+    return station.m2.parameter
+  }
+
+  const type = String(
+    anomaly?.anomaly_type ??
+    station?.m2?.anomaly_type ??
+    ''
+  ).toLowerCase()
+
+  if (type.includes('rain')) return 'rainfall'
+  if (type.includes('humidity')) return 'humidity'
+  if (type.includes('wind')) return 'wind_speed'
+  if (type.includes('pressure')) return 'pressure'
+  if (type.includes('temperature')) return 'temperature'
+
+  return 'Weather parameter'
+}
+
+
+
+function getAnomalyType(m2, m3, m4) {
+  return m4?.anomaly_type || m3?.anomaly_type || m2?.anomaly_type || 'Weather Anomaly'
+}
+
+function getExplanation(m4, m3, m2) {
+  return m4?.explanation || m3?.reason || m3?.explanation || m2?.reason || 'Weather anomaly detected.'
+}
+
+function deriveStatus(m2, m3, m4) {
+  const severity = String(m4?.severity ?? '').toUpperCase().trim()
+  const mlStatus = String(m2?.ml_status ?? m2?.status ?? '').toLowerCase()
+  const m3Anomaly = Boolean(m3?.anomaly)
+
+  if (severity === 'CRITICAL') return 'Critical'
+  if (severity === 'VERY HIGH') return 'High Risk'
+  if (severity === 'HIGH') return 'High Risk'
+  if (severity === 'MEDIUM') return 'Warning'
+  if (severity === 'LOW' && (mlStatus.includes('anomaly') || m3Anomaly)) return 'Warning'
+  if (mlStatus.includes('anomaly') || m3Anomaly) return 'Warning'
+  if (severity === 'LOW') return 'Healthy'
+
+  const risk = Number(m4?.risk_score)
+  if (Number.isFinite(risk)) {
+    if (risk >= 85) return 'Critical'
+    if (risk >= 65) return 'High Risk'
+    if (risk >= 35) return 'Warning'
+  }
+  return 'Healthy'
+}
 
 // =====================================
 // PARAMETERS
@@ -162,76 +420,36 @@ const parameters = {
   Temperature: {
     icon: Thermometer,
     unit: '°C',
-    value: '29.8',
-    min: '21.2',
-    max: '41.7',
-    trend: '+2.8%',
-    trendLabel: 'vs last hour',
     label: 'Temperature over time',
-    color: '#ff9e70',
-    chart: [27.1, 28.4, 27.8, 30.2, 29.3, 31.8, 30.6, 33.1, 32.4, 35.2, 34.7, 36.6],
-    anomalies: '4 active',
-    insight: 'Heat pockets detected across western grid'
+    color: '#ff9e70'
   },
 
   Humidity: {
     icon: CloudSun,
     unit: '%',
-    value: '68',
-    min: '42',
-    max: '91',
-    trend: '-4.2%',
-    trendLabel: 'vs last hour',
     label: 'Humidity over time',
-    color: '#72c9e8',
-    chart: [74, 77, 73, 79, 76, 71, 74, 67, 70, 65, 63, 68],
-    anomalies: '3 active',
-    insight: 'Drying trend emerging in central stations'
+    color: '#72c9e8'
   },
 
   Wind: {
     icon: Wind,
     unit: 'km/h',
-    value: '14',
-    min: '4',
-    max: '47',
-    trend: '+6.4%',
-    trendLabel: 'vs last hour',
     label: 'Wind speed over time',
-    color: '#b49cff',
-    chart: [9, 12, 10, 16, 14, 19, 17, 22, 20, 26, 23, 28],
-    anomalies: '2 active',
-    insight: 'Gust activity building near northern corridor'
+    color: '#b49cff'
   },
 
   Rainfall: {
     icon: CloudRain,
     unit: 'mm',
-    value: '4.8',
-    min: '0',
-    max: '82',
-    trend: '+12.1%',
-    trendLabel: 'vs last hour',
     label: 'Rainfall over time',
-    color: '#5ed9c3',
-    chart: [1.2, 2.8, 1.8, 5.2, 4.1, 8.7, 6.4, 12.3, 10.8, 18.6, 15.9, 22.4],
-    anomalies: '5 active',
-    insight: 'Monsoon cells approaching east network'
+    color: '#5ed9c3'
   },
 
   Pressure: {
     icon: Gauge,
     unit: 'hPa',
-    value: '1009',
-    min: '998',
-    max: '1022',
-    trend: '-0.8%',
-    trendLabel: 'vs last hour',
     label: 'Atmospheric pressure over time',
-    color: '#e6bf69',
-    chart: [1014, 1012, 1013, 1010, 1011, 1008, 1010, 1006, 1007, 1004, 1006, 1002],
-    anomalies: '2 active',
-    insight: 'Pressure trough forming around Maharashtra'
+    color: '#e6bf69'
   }
 }
 
@@ -242,60 +460,10 @@ const navItems = [
   ['Stations', Globe2],
   ['Alerts', Bell],
   ['Anomalies', Zap],
-  ['Reports', BarChart3],
   ['System Health', ShieldCheck],
   ['Settings', Settings],
   ['About', CircleHelp]
 ]
-
-
-// =====================================
-// MINI CHART
-// =====================================
-
-function MiniChart({ data, color, height = 58 }) {
-
-  const low = Math.min(...data)
-  const high = Math.max(...data)
-  const spread = high - low || 1
-
-  const points = data
-    .map(
-      (value, index) =>
-        `${(index / (data.length - 1)) * 100},${
-          height - ((value - low) / spread) * (height - 5) - 3
-        }`
-    )
-    .join(' ')
-
-  const area = `0,${height} ${points} 100,${height}`
-
-  return (
-    <svg
-      className="mini-chart"
-      viewBox={`0 0 100 ${height}`}
-      preserveAspectRatio="none"
-      aria-hidden="true"
-    >
-      <defs>
-        <linearGradient id="chartFill" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor={color} stopOpacity=".28" />
-          <stop offset="100%" stopColor={color} stopOpacity="0" />
-        </linearGradient>
-      </defs>
-
-      <polygon points={area} fill="url(#chartFill)" />
-
-      <polyline
-        points={points}
-        fill="none"
-        stroke={color}
-        strokeWidth="2"
-        vectorEffect="non-scaling-stroke"
-      />
-    </svg>
-  )
-}
 
 
 // =====================================
@@ -353,7 +521,16 @@ function App() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
 
-  const [selectedStation, setSelectedStation] = useState(null)
+  const [selectedStationId, setSelectedStationId] = useState(null)
+  const [stationSearchTerm, setStationSearchTerm] = useState('')
+  const [stationStatusFilter, setStationStatusFilter] = useState('All')
+  const [stationHistory, setStationHistory] = useState([])
+  const [historyLoading, setHistoryLoading] = useState(false)
+  const [historyError, setHistoryError] = useState(null)
+  const [historyParameter, setHistoryParameter] = useState('temperature')
+  const [dashboardHistory, setDashboardHistory] = useState([])
+  const [dashboardHistoryLoading, setDashboardHistoryLoading] = useState(false)
+  const [dashboardHistoryError, setDashboardHistoryError] = useState(null)
 
   const [isSidebarOpen, setSidebarOpen] = useState(false)
   const [autoRotate, setAutoRotate] = useState(true)
@@ -375,206 +552,462 @@ function App() {
 
   const current = parameters[parameter]
 
+function normalizeM3(value) {
+  if (Array.isArray(value)) return value
+  if (value && typeof value === 'object') return [value]
+  return []
+}
 
+function getM3Anomalies(value) {
+  return normalizeM3(value).filter(
+    (item) => item && item.anomaly
+  )
+}
   // =====================================
   // CREATE STATIONS FROM LIVE BACKEND DATA
   // =====================================
 
-  const stations =
-    liveData && Array.isArray(liveData.stations)
-      ? liveData.stations
-          .filter((item) => !item.error)
-          .map((item) => {
-
-            const weather = item.weather_data || {}
-            const m2 = item.m2 || {}
-            const m3 = item.m3 || {}
-            const m4 = item.m4 || {}
-
-            // Get results directly from backend modules
-const risk = Math.round(
-  Number(m4.risk_score ?? 0)
-)
-
-// Module 4 decides severity.
-// If severity is missing, only use ML result as a fallback.
-const mlStatus = String(
-  m2.ml_status ??
-  m2.status ??
-  ''
-).toLowerCase()
-
-const status =
-  m4.severity ??
-  m4.status ??
-  (mlStatus.includes('anomaly')
-    ? 'Warning'
-    : 'Healthy')
-
-// Frontend only assigns display color
-const statusColors = {
-  Healthy: '#55d6a3',
-  Warning: '#ffc857',
-  'High Risk': '#ff9955',
-  Critical: '#ff6b5f'
-}
-
-const color =
-  statusColors[status] ?? '#55d6a3'
-            return {
-
-              id: item.station?.id || 'Unknown',
-
-              city:
-                item.station?.city ||
-                item.station?.name ||
-                'Unknown',
-
-              region:
-                item.station?.region ||
-                item.station?.state ||
-                'Unknown',
-
-              lat:
-                Number(item.station?.latitude) || 0,
-
-              lng:
-                Number(item.station?.longitude) || 0,
-
-              status,
-              color,
-              risk,
-
-              temp:
-                Number(weather.temperature ?? 0),
-
-              humidity:
-                Number(weather.humidity ?? 0),
-
-              pressure:
-                Number(weather.pressure ?? 0),
-
-              wind:
-                Number(weather.wind_speed ?? 0),
-
-              rainfall:
-                Number(weather.rainfall ?? 0),
-
-              updated: 'Just now',
-
-              m2,
-              m3,
-              m4,
-
-              sensorHealth:
-                m4.sensor_health ?? 100,
-
-              severity:
-                m4.severity ?? status,
-
-              explanation:
-                m4.explanation ??
-                m3.explanation ??
-                'No anomaly detected'
-            }
-
-          })
-      : mockStations
+  const stations = Array.isArray(liveData?.stations) && liveData.stations.length
+    ? liveData.stations
+        .filter((item) => item && item.station)
+        .map((item) => {
+          const weather = item.weather_data || {}
+          const m2 = item.m2 || {}
+          const m3 = normalizeM3(item.m3)
+          const m4 = item.m4 || {}
+          const firstM3 = getM3Anomalies(m3)[0] || {}
+          const status = deriveStatus(m2, firstM3, m4)
+          const statusColors = {
+            Healthy: '#55d6a3',
+            Warning: '#ffc857',
+            'High Risk': '#ff9955',
+            Critical: '#ff6b5f'
+          }
+          const risk = Number(m4.risk_score)
+          return {
+            id: item.station.id,
+            city: item.station.city || item.station.name || 'Unknown',
+            region: item.station.region || item.station.state || 'Unknown',
+            lat: Number(item.station.latitude) || 0,
+            lng: Number(item.station.longitude) || 0,
+            status,
+            color: statusColors[status],
+            risk: Number.isFinite(risk) ? Math.round(risk) : 0,
+            temp: weather.temperature ?? '—',
+            humidity: weather.humidity ?? '—',
+            pressure: weather.pressure ?? '—',
+            wind: weather.wind_speed ?? '—',
+            rainfall: weather.rainfall ?? '—',
+            updated: item.timestamp ? new Date(item.timestamp).toLocaleTimeString() : 'Just now',
+            m2,
+            m3,
+            m4,
+            metadata: item.station,
+            weatherData: weather,
+            sensorHealth: m4.sensor_health ?? 100,
+            severity: m4.severity || status,
+            anomalyType: getAnomalyType(m2, firstM3, m4),
+            explanation: getExplanation(m4, firstM3, m2)
+          }
+        })
+    : fallbackStations
 
 
   // =====================================
   // ANOMALIES
   // =====================================
 
-  const anomalyRows = stations
-    .filter((station) => {
 
-      const mlStatus = String(
-        station.m2?.ml_status ??
-        station.m2?.status ??
-        ''
-      ).toLowerCase()
+// =====================================
+// ANOMALIES
+// =====================================
 
-      const m4Anomaly =
-        String(
-          station.m4?.anomaly ??
-          station.m4?.status ??
-          ''
-        ).toLowerCase()
+const anomalyRows = stations.flatMap((station) => {
 
-      return (
-        mlStatus.includes('anomaly') ||
-        m4Anomaly.includes('anomaly') ||
-        station.status === 'Critical' ||
-        station.status === 'High Risk'
-      )
+  const m3Anomalies = getM3Anomalies(station.m3)
+
+  const mlStatus = String(
+    station.m2?.ml_status ??
+    station.m2?.status ??
+    ''
+  ).toLowerCase()
+
+  const m2IsAnomaly =
+    mlStatus.includes('anomaly')
+
+
+  if (m3Anomalies.length) {
+
+    return m3Anomalies.map((result, resultIndex) => {
+
+      /* ---------------------------------
+         PARAMETER
+      --------------------------------- */
+
+      let parameter =
+        result?.feature ?? 'Weather parameter'
+
+
+      if (Array.isArray(parameter)) {
+        parameter = parameter
+          .map((item) =>
+            String(item)
+              .replace(/_/g, ' ')
+              .replace(/\b\w/g, c =>
+                c.toUpperCase()
+              )
+          )
+          .join(', ')
+      }
+
+
+      /* ---------------------------------
+         DETECTED VALUE
+      --------------------------------- */
+
+      let detectedValue =
+        result?.value ?? '—'
+
+
+      /*
+       * If backend provides details[],
+       * use the actual parameter-wise values.
+       */
+
+      if (
+        Array.isArray(result?.details) &&
+        result.details.length
+      ) {
+
+        detectedValue = result.details
+          .map((detail) => {
+
+            const feature =
+              detail?.feature
+
+            const value =
+              detail?.value
+
+            if (!feature) {
+              return null
+            }
+
+            const label =
+              String(feature)
+                .replace(/_/g, ' ')
+                .replace(/\b\w/g, c =>
+                  c.toUpperCase()
+                )
+
+            return `${label}: ${value ?? '—'}`
+
+          })
+          .filter(Boolean)
+          .join(' • ')
+
+      }
+
+
+      /* ---------------------------------
+         EXPECTED VALUE
+      --------------------------------- */
+
+      let expectedValue =
+        result?.expected_value
+
+
+      if (!expectedValue) {
+
+        const anomalyType =
+          String(
+            result?.anomaly_type || ''
+          ).toUpperCase()
+
+        if (
+          anomalyType === 'FROZEN_VALUE'
+        ) {
+          expectedValue =
+            'Variable reading'
+        }
+        else if (
+          anomalyType === 'SPIKE'
+        ) {
+          expectedValue =
+            'Within normal variation'
+        }
+        else if (
+          anomalyType === 'DRIFT'
+        ) {
+          expectedValue =
+            'Stable baseline'
+        }
+        else if (
+          anomalyType === 'MISSING_DATA'
+        ) {
+          expectedValue =
+            'Value required'
+        }
+        else {
+          expectedValue =
+            'Normal range'
+        }
+      }
+
+
+      /* ---------------------------------
+         ACTUAL ANOMALY STATUS
+      --------------------------------- */
+
+      const hasM3Anomaly =
+        Boolean(result?.anomaly)
+
+      const isAnomaly =
+        hasM3Anomaly ||
+        m2IsAnomaly
+
+
+      /*
+       * IMPORTANT:
+       * Status should NOT come only from M2.
+       *
+       * M3 anomaly = ANOMALY
+       */
+
+      const displayStatus =
+        isAnomaly
+          ? 'ANOMALY'
+          : 'NORMAL'
+
+
+      /* ---------------------------------
+         SEVERITY
+      --------------------------------- */
+
+      const risk =
+        Number(
+          station.m4?.risk_score ?? 0
+        )
+
+
+      const severity =
+        station.m4?.severity ??
+        station.status ??
+        (
+          risk >= 85
+            ? 'Critical'
+            : risk >= 65
+            ? 'High Risk'
+            : risk >= 35
+            ? 'Warning'
+            : 'Healthy'
+        )
+
+
+      /* ---------------------------------
+         CONFIDENCE
+      --------------------------------- */
+
+      const rawConfidence =
+        Number(
+          station.m4?.confidence
+        )
+
+      const confidence =
+        Number.isFinite(rawConfidence)
+          ? `${Math.round(
+              rawConfidence * 100
+            )}%`
+          : '—'
+
+
+      /* ---------------------------------
+         TIMESTAMP
+      --------------------------------- */
+
+      const timestamp =
+        result?.timestamp ||
+        station.updated
+
+
+      /* ---------------------------------
+         EXPLANATION
+      --------------------------------- */
+
+      const explanation =
+        station.m4?.explanation ||
+        result?.reason ||
+        'Weather anomaly detected.'
+
+
+      return {
+
+        station:
+          station.id,
+
+        city:
+          station.city,
+
+        type:
+          result?.anomaly_type ||
+          'Weather Anomaly',
+
+        parameter,
+
+        value:
+          detectedValue,
+
+        expected:
+          expectedValue,
+
+        risk,
+
+        confidence,
+
+        severity,
+
+        status:
+          displayStatus,
+
+        time:
+          timestamp,
+
+        description:
+          explanation,
+
+        source:
+          'M3',
+
+        key:
+          `${station.id}-${result?.anomaly_type || 'anomaly'}-${resultIndex}`
+
+      }
+
     })
-    .map((station) => ({
 
-      station: station.id,
+  }
 
-      city: station.city,
 
-     type:
-  station.m4?.anomaly_type ??
-  station.m3?.anomaly_type ??
-  station.m2?.anomaly_type ??
-  'Weather Anomaly',
+  /* =====================================
+     M2 ONLY ANOMALY
+  ===================================== */
 
-     parameter:
-  station.m4?.parameter ??
-  station.m3?.parameter ??
-  station.m2?.parameter ??
-  'Multiple Parameters',
+  if (m2IsAnomaly) {
+
+    const parameter =
+      station.m2?.parameter ||
+      'Weather parameter'
+
+
+    const detectedValue =
+      station.m2?.detected_value ??
+      station.weatherData?.[
+        parameter
+      ] ??
+      '—'
+
+
+    const risk =
+      Number(
+        station.m4?.risk_score ?? 0
+      )
+
+
+    const severity =
+      station.m4?.severity ??
+      station.status ??
+      'Warning'
+
+
+    return [{
+
+      station:
+        station.id,
+
+      city:
+        station.city,
+
+      type:
+        station.m2?.anomaly_type ??
+        'ML Anomaly',
+
+      parameter,
 
       value:
-        station.m2?.detected_value ??
-        station.m3?.detected_value ??
-        `Risk ${station.risk}`,
+        detectedValue,
 
       expected:
         station.m2?.expected_value ??
-        station.m3?.expected_value ??
-        'Normal weather pattern',
+        'Normal range',
 
-      risk: station.risk,
+      risk,
 
-      severity: station.status,
+      confidence:
+        Number.isFinite(
+          Number(
+            station.m4?.confidence
+          )
+        )
+          ? `${Math.round(
+              Number(
+                station.m4.confidence
+              ) * 100
+            )}%`
+          : '—',
 
-      time: station.updated,
+      severity,
 
-      description: station.explanation
-    }))
+      status:
+        'ANOMALY',
 
+      time:
+        station.updated,
+
+      description:
+        station.m4?.explanation ||
+        station.m2?.reason ||
+        'Unusual weather pattern detected.',
+
+      source:
+        'M2',
+
+      key:
+        `${station.id}-m2`
+
+    }]
+
+  }
+
+
+  return []
+
+})
 
   // =====================================
   // ALERTS
   // =====================================
 
   const alerts = stations
-    .filter(
-      (station) =>
+    .filter((station) => {
+      const mlStatus = String(station.m2?.ml_status ?? station.m2?.status ?? '').toLowerCase()
+      const m3Anomaly = getM3Anomalies(station.m3).length > 0
+      return (
+        mlStatus.includes('anomaly') ||
+        m3Anomaly ||
         station.status === 'Warning' ||
         station.status === 'High Risk' ||
         station.status === 'Critical'
-    )
+      )
+    })
     .map((station) => ({
-
       station: station.id,
-
-      type:
-        station.m2?.anomaly_type ??
-        'Weather Anomaly',
-
+      type: station.anomalyType,
       severity: station.status,
-
       risk: station.risk,
-
       time: station.updated,
-
       description: station.explanation,
-anomalyType: station.m4?.anomaly_type ?? station.m3?.anomaly_type ?? 'Weather Anomaly'
+      anomalyType: station.anomalyType
     }))
+
 
 
   // =====================================
@@ -584,19 +1017,7 @@ anomalyType: station.m4?.anomaly_type ?? station.m3?.anomaly_type ?? 'Weather An
   const criticalAnomalies =
     anomalyRows.length > 0
       ? anomalyRows
-      : [
-          {
-            station: 'SYSTEM',
-            city: 'Network',
-            type: 'No active anomaly',
-            parameter: 'All parameters',
-            value: 'Normal',
-            expected: 'Normal',
-            risk: 0,
-            severity: 'Healthy',
-            time: 'Just now'
-          }
-        ]
+      : []
 
 
   // =====================================
@@ -617,6 +1038,110 @@ anomalyType: station.m4?.anomaly_type ?? station.m3?.anomaly_type ?? 'Weather An
 
 
   const activeAnomalies = anomalyRows.length
+
+  const selectedStation = stations.find(
+    (station) => station.id === selectedStationId
+  )
+
+
+  useEffect(() => {
+
+    const handlePopState = () => {
+      setSelectedStationId(null)
+      setActiveNav('Stations')
+      setAutoRotate(true)
+    }
+
+    window.addEventListener('popstate', handlePopState)
+
+    return () => window.removeEventListener('popstate', handlePopState)
+  }, [])
+
+
+  useEffect(() => {
+
+    if (!selectedStationId) {
+      setStationHistory([])
+      setHistoryError(null)
+      setHistoryParameter('temperature')
+      return undefined
+    }
+
+    const controller = new AbortController()
+
+    const fetchStationHistory = async () => {
+
+      try {
+        setHistoryLoading(true)
+        setHistoryError(null)
+
+        const response = await fetch(
+          `http://127.0.0.1:8000/history/${encodeURIComponent(selectedStationId)}`,
+          { signal: controller.signal }
+        )
+
+        if (!response.ok) {
+          throw new Error(`Failed to fetch station history: ${response.status}`)
+        }
+
+        const data = await response.json()
+        setStationHistory(Array.isArray(data.data) ? data.data : [])
+      } catch (err) {
+        if (err.name === 'AbortError') {
+          return
+        }
+        setStationHistory([])
+        setHistoryError(err.message)
+      } finally {
+        setHistoryLoading(false)
+      }
+    }
+
+    fetchStationHistory()
+
+    return () => controller.abort()
+  }, [selectedStationId])
+
+
+  useEffect(() => {
+
+    const stationId = stations[0]?.id
+
+    if (activeNav !== 'Dashboard' || selectedStationId || !stationId) {
+      return undefined
+    }
+
+    const controller = new AbortController()
+
+    const fetchDashboardHistory = async () => {
+      try {
+        setDashboardHistoryLoading(true)
+        setDashboardHistoryError(null)
+
+        const response = await fetch(
+          `http://127.0.0.1:8000/history/${encodeURIComponent(stationId)}`,
+          { signal: controller.signal }
+        )
+
+        if (!response.ok) {
+          throw new Error(`Failed to fetch dashboard history: ${response.status}`)
+        }
+
+        const data = await response.json()
+        setDashboardHistory(Array.isArray(data.data) ? data.data : [])
+      } catch (err) {
+        if (err.name === 'AbortError') return
+        setDashboardHistory([])
+        setDashboardHistoryError(err.message)
+      } finally {
+        setDashboardHistoryLoading(false)
+      }
+    }
+
+    fetchDashboardHistory()
+
+    return () => controller.abort()
+  }, [activeNav, selectedStationId, stations[0]?.id])
 
 
   // =====================================
@@ -806,9 +1331,8 @@ anomalyType: station.m4?.anomaly_type ?? station.m3?.anomaly_type ?? 'Weather An
 
   const selectStation = (station) => {
 
-    setSelectedStation(station)
-
-    setActiveNav('Dashboard')
+    setSelectedStationId(station.id)
+    window.history.pushState({ stationId: station.id }, '', window.location.href)
 
     setAutoRotate(false)
 
@@ -1012,36 +1536,14 @@ anomalyType: station.m4?.anomaly_type ?? station.m3?.anomaly_type ?? 'Weather An
 
                   )}
 
-              </button>
+                </button>
 
-            )
+              )
           )}
 
         </nav>
 
         <div className="sidebar-bottom">
-
-          <div className="operator">
-
-            <div className="avatar">
-              RK
-            </div>
-
-            <div>
-
-              <strong>
-                Riya Kapoor
-              </strong>
-
-              <small>
-                System operator
-              </small>
-
-            </div>
-
-            <ChevronDown size={14} />
-
-          </div>
 
           <div className="system-status">
 
@@ -1086,7 +1588,7 @@ anomalyType: station.m4?.anomaly_type ?? station.m3?.anomaly_type ?? 'Weather An
                 /
               </span>
 
-              WESTERN INDIA GRID
+              AWS WEATHER NETWORK
 
             </div>
 
@@ -1100,29 +1602,7 @@ anomalyType: station.m4?.anomaly_type ?? station.m3?.anomaly_type ?? 'Weather An
 
           </div>
 
-
           <div className="top-actions">
-
-            <div className="last-sync">
-
-              <span>
-                Last sync
-              </span>
-
-              <strong>
-
-                {loading
-                  ? 'Syncing...'
-                  : error
-                    ? 'Offline'
-                    : 'Live'}
-
-              </strong>
-
-              <i />
-
-            </div>
-
 
             <div className="global-search">
 
@@ -1230,7 +1710,6 @@ anomalyType: station.m4?.anomaly_type ?? station.m3?.anomaly_type ?? 'Weather An
 
               </button>
 
-
               {notificationsOpen && (
 
                 <NotificationPanel
@@ -1249,7 +1728,27 @@ anomalyType: station.m4?.anomaly_type ?? station.m3?.anomaly_type ?? 'Weather An
         </header>
 
 
-        {activeNav !== 'Dashboard' ? (
+        {selectedStation ? (
+
+          <StationDetailsView
+            station={selectedStation}
+            history={stationHistory}
+            historyLoading={historyLoading}
+            historyError={historyError}
+            historyParameter={historyParameter}
+            setHistoryParameter={setHistoryParameter}
+            onBack={() => {
+              if (window.history.state?.stationId) {
+                window.history.back()
+              } else {
+                setSelectedStationId(null)
+                setActiveNav('Stations')
+                setAutoRotate(true)
+              }
+            }}
+          />
+
+        ) : activeNav !== 'Dashboard' ? (
 
           <SecondaryView
             view={activeNav}
@@ -1265,6 +1764,10 @@ anomalyType: station.m4?.anomaly_type ?? station.m3?.anomaly_type ?? 'Weather An
             setLiveParameter={setLiveParameter}
             globeAnimation={globeAnimation}
             setGlobeAnimation={setGlobeAnimation}
+            stationSearchTerm={stationSearchTerm}
+            setStationSearchTerm={setStationSearchTerm}
+            stationStatusFilter={stationStatusFilter}
+            setStationStatusFilter={setStationStatusFilter}
           />
 
         ) : (
@@ -1477,29 +1980,14 @@ anomalyType: station.m4?.anomaly_type ?? station.m3?.anomaly_type ?? 'Weather An
 
               <aside className="right-panel">
 
-                {selectedStation ? (
-
-                  <StationPanel
-                    station={selectedStation}
-                    parameter={parameter}
-
-                    onClose={() => {
-
-                      setSelectedStation(null)
-
-                      setAutoRotate(true)
-
-                    }}
-                  />
-
-                ) : (
-
-                  <OverviewPanel
-                    parameter={parameter}
-                    current={current}
-                  />
-
-                )}
+                <OverviewPanel
+                  parameter={parameter}
+                  current={current}
+                  stations={stations}
+                  history={dashboardHistory}
+                  historyLoading={dashboardHistoryLoading}
+                  historyError={dashboardHistoryError}
+                />
 
               </aside>
 
@@ -1554,7 +2042,7 @@ anomalyType: station.m4?.anomaly_type ?? station.m3?.anomaly_type ?? 'Weather An
 
                             setParameter(name)
 
-                            setSelectedStation(null)
+                            setSelectedStationId(null)
 
                           }}
                         >
@@ -1577,22 +2065,24 @@ anomalyType: station.m4?.anomaly_type ?? station.m3?.anomaly_type ?? 'Weather An
               </div>
 
 
-              <AnomalyCard
-                anomaly={
-                  criticalAnomalies[
-                    criticalIndex %
-                    criticalAnomalies.length
-                  ]
-                }
-
-                onNext={() =>
-                  setCriticalIndex(
-                    (index) =>
-                      (index + 1) %
+              {criticalAnomalies.length > 0 && (
+                <AnomalyCard
+                  anomaly={
+                    criticalAnomalies[
+                      criticalIndex %
                       criticalAnomalies.length
-                  )
-                }
-              />
+                    ]
+                  }
+
+                  onNext={() =>
+                    setCriticalIndex(
+                      (index) =>
+                        (index + 1) %
+                        criticalAnomalies.length
+                    )
+                  }
+                />
+              )}
 
             </section>
 
@@ -1624,14 +2114,12 @@ function SecondaryView({
   globeAnimation,
   setGlobeAnimation,
   liveParameter,
-  setLiveParameter
+  setLiveParameter,
+  stationSearchTerm,
+  setStationSearchTerm,
+  stationStatusFilter,
+  setStationStatusFilter
 }) {
-
-  const [searchTerm, setSearchTerm] =
-    useState('')
-
-  const [statusFilter, setStatusFilter] =
-    useState('All')
 
   const [alertFilter, setAlertFilter] =
     useState('All')
@@ -1676,14 +2164,14 @@ function SecondaryView({
         `${station.id} ${station.city} ${station.region}`
           .toLowerCase()
           .includes(
-            searchTerm.toLowerCase()
+            stationSearchTerm.toLowerCase()
           )
 
       return (
         matchesSearch &&
         (
-          statusFilter === 'All' ||
-          station.status === statusFilter
+          stationStatusFilter === 'All' ||
+          station.status === stationStatusFilter
         )
       )
 
@@ -1717,10 +2205,10 @@ function SecondaryView({
     return (
       <StationsView
         stations={filteredStations}
-        searchTerm={searchTerm}
-        setSearchTerm={setSearchTerm}
-        statusFilter={statusFilter}
-        setStatusFilter={setStatusFilter}
+        searchTerm={stationSearchTerm}
+        setSearchTerm={setStationSearchTerm}
+        statusFilter={stationStatusFilter}
+        setStatusFilter={setStationStatusFilter}
         selectStation={selectStation}
       />
     )
@@ -1752,12 +2240,6 @@ function SecondaryView({
 
   }
 
-
-  if (view === 'Reports') {
-
-    return <ReportsView />
-
-  }
 
 
   if (view === 'System Health') {
@@ -1882,11 +2364,7 @@ function LiveDataView({
 
                     <strong>
 
-                      {stationValue(
-                        station,
-                        name,
-                        tick
-                      )}
+                      {stationValue(station, name)}
 
                     </strong>
 
@@ -1937,21 +2415,22 @@ function LiveDataView({
 
 function stationValue(
   station,
-  name,
-  tick
+  name
 ) {
 
-  const value =
-    name === 'Temperature'
-      ? station.temp +
-        (tick % 2 ? 0.1 : 0)
-      : name === 'Humidity'
-        ? station.humidity
-        : name === 'Wind'
-          ? station.wind
-          : name === 'Rainfall'
-            ? station.rainfall
-            : station.pressure
+  const weatherKey = {
+    Temperature: 'temperature',
+    Humidity: 'humidity',
+    Wind: 'wind_speed',
+    Rainfall: 'rainfall',
+    Pressure: 'pressure'
+  }[name]
+
+  const value = station.weatherData?.[weatherKey]
+
+  if (value === undefined || value === null) {
+    return value
+  }
 
   return name === 'Temperature'
     ? Number(value).toFixed(1)
@@ -2433,14 +2912,18 @@ function AnomaliesView({
 
         <div className="table-row table-header">
 
-         <span>Station</span>
-<span>Type</span>
-<span>Parameter</span>
-<span>Detected Value</span>
-<span>Expected Value</span>
-<span>Risk Score</span>
-<span>Severity</span>
-<span>Explanation</span>
+          <span>Station</span>
+          <span>Location</span>
+          <span>Type</span>
+          <span>Parameter</span>
+          <span>Detected Value</span>
+          <span>Expected Value</span>
+          <span>Risk Score</span>
+          <span>Confidence</span>
+          <span>Severity</span>
+          <span>Status</span>
+          <span>Timestamp</span>
+          <span>Explanation</span>
 
         </div>
 
@@ -2464,6 +2947,8 @@ function AnomaliesView({
                   </strong>
                 </span>
 
+                <span>{anomaly.city}</span>
+
                 <span>
                   {anomaly.type}
                 </span>
@@ -2484,6 +2969,8 @@ function AnomaliesView({
                   {anomaly.risk}/100
                 </span>
 
+                <span>{anomaly.confidence}</span>
+
                 <span>
 
                   <StatusPill
@@ -2493,6 +2980,12 @@ function AnomaliesView({
                   />
 
                 </span>
+
+                <span>{anomaly.status}</span>
+
+                <span>{anomaly.time}</span>
+
+                <span className="alert-description">{anomaly.description}</span>
 
               </div>
 
@@ -2506,44 +2999,6 @@ function AnomaliesView({
           </div>
 
         )}
-
-      </div>
-
-    </div>
-  )
-}
-
-
-// =====================================
-// REPORTS
-// =====================================
-
-function ReportsView() {
-
-  return (
-
-    <div className="secondary-view">
-
-      <ViewHeader
-        eyebrow="OPERATIONAL REPORTING"
-        title="Reports"
-      />
-
-      <div className="report-grid">
-
-        <StatCard
-          label="Stations monitored"
-          value="250"
-          tone="cyan"
-          icon={Globe2}
-        />
-
-        <StatCard
-          label="Total anomalies"
-          value="12"
-          tone="red"
-          icon={Zap}
-        />
 
       </div>
 
@@ -2644,14 +3099,38 @@ function SettingsView({
     <div className="secondary-view">
 
       <ViewHeader
-        eyebrow="OPERATOR PREFERENCES"
+        eyebrow="AWS ANOMALY DETECTION SYSTEM"
         title="Settings"
       />
 
       <div className="settings-panel">
 
+        <div className="setting-row">
+          <div>
+            <strong>Backend API</strong>
+            <small>Live data source: /predict/live</small>
+          </div>
+          <span className="setting-status">Connected through live polling</span>
+        </div>
+
+        <div className="setting-row">
+          <div>
+            <strong>M2 / M3 / M4 pipeline</strong>
+            <small>Isolation Forest, rule engine, and M4 risk and health processing</small>
+          </div>
+          <span className="setting-status">Backend managed</span>
+        </div>
+
+        <div className="setting-row">
+          <div>
+            <strong>Weather monitoring</strong>
+            <small>Temperature, humidity, pressure, wind speed, and rainfall</small>
+          </div>
+          <span className="setting-status">Live station telemetry</span>
+        </div>
+
         <SettingToggle
-          label="Light theme"
+          label="Light interface theme"
           checked={
             theme === 'light'
           }
@@ -2832,10 +3311,27 @@ function AboutView({
 
 function OverviewPanel({
   parameter,
-  current
+  current,
+  stations,
+  history,
+  historyLoading,
+  historyError
 }) {
 
   const Icon = current.icon
+  const values = stations
+    .map((station) => stationValue(station, parameter))
+    .filter((value) => value !== undefined && value !== null)
+  const average = values.length
+    ? values.reduce((total, value) => total + Number(value), 0) / values.length
+    : null
+  const historyKey = {
+    Temperature: 'temperature',
+    Humidity: 'humidity',
+    Wind: 'wind_speed',
+    Rainfall: 'rainfall',
+    Pressure: 'pressure'
+  }[parameter]
 
   return (
 
@@ -2872,12 +3368,12 @@ function OverviewPanel({
         <div>
 
           <span>
-            Current average
+            Live average
           </span>
 
           <strong>
 
-            {current.value}
+            {average === null ? '—' : average.toFixed(parameter === 'Temperature' || parameter === 'Rainfall' ? 1 : 0)}
 
             <em>
               {current.unit}
@@ -2888,12 +3384,6 @@ function OverviewPanel({
         </div>
 
       </div>
-
-
-      <MiniChart
-        data={current.chart}
-        color={current.color}
-      />
 
 
       <div className="insight-box">
@@ -2909,11 +3399,33 @@ function OverviewPanel({
           </span>
 
           <p>
-            {current.insight}
+            {stations.length ? `${stations.length} stations reporting live ${parameter.toLowerCase()} data` : 'Waiting for live station data'}
           </p>
 
         </div>
 
+      </div>
+
+      <div className="dashboard-history-chart">
+        <div className="dashboard-history-heading">
+          <span className="section-kicker">LIVE HISTORY · API DATA</span>
+          <small>{stations[0]?.id}</small>
+        </div>
+        {historyLoading ? (
+          <div className="dashboard-chart-empty">Loading history...</div>
+        ) : historyError ? (
+          <div className="dashboard-chart-empty">{historyError}</div>
+        ) : history.length ? (
+          <TrendChart
+            title={parameter}
+            unit={current.unit}
+            history={history}
+            valueKey={historyKey}
+            group="weather_data"
+          />
+        ) : (
+          <div className="dashboard-chart-empty">No historical data available</div>
+        )}
       </div>
 
     </div>
@@ -2925,108 +3437,1076 @@ function OverviewPanel({
 // STATION PANEL
 // =====================================
 
-function StationPanel({
+function StationDetailsView({
   station,
-  parameter,
-  onClose
+  onBack,
+  history = [],
 }) {
+
+  /* =====================================================
+     M2 + M3 CURRENT DETECTION
+     ===================================================== */
+
+  const m2 = station?.m2 || {};
+
+  const m3Items = normalizeM3(
+    station?.m3 ||
+    station?.prediction?.m3
+  );
+
+  const m4 =
+    station?.m4 ||
+    station?.prediction?.m4 ||
+    {};
+
+  /* M2 says anomaly */
+
+  const m2Anomaly =
+    String(
+      m2?.ml_status ??
+      m2?.status ??
+      ""
+    ).toLowerCase() === "anomaly";
+
+
+  /* M3 says anomaly */
+
+  const m3Anomaly =
+    m3Items.some(
+      (item) =>
+        item?.anomaly === true
+    );
+
+
+  /* Overall current detection */
+
+  const isAnomaly =
+    m2Anomaly ||
+    m3Anomaly;
+
+
+  /* =====================================================
+     FIRST M3 ANOMALY
+     ===================================================== */
+
+  const firstAnomaly =
+    m3Items.find(
+      (item) =>
+        item?.anomaly === true
+    );
+
+
+  /* =====================================================
+     ANOMALY TYPE
+     ===================================================== */
+
+  const anomalyType =
+    firstAnomaly?.anomaly_type ||
+    (m2Anomaly
+      ? "ML ANOMALY"
+      : "NORMAL");
+
+
+  /* =====================================================
+     FEATURE / PARAMETER
+     ===================================================== */
+
+  let feature =
+    firstAnomaly?.feature ||
+    m2?.parameter ||
+    "";
+
+  if (Array.isArray(feature)) {
+    feature = feature.join(", ");
+  }
+
+
+  /* =====================================================
+     DETECTION TYPE
+     ===================================================== */
+
+  const detectionType =
+    m3Anomaly
+      ? "Rule-based pattern detected"
+      : m2Anomaly
+      ? "Unusual weather pattern"
+      : "Normal";
+
+
+  /* =====================================================
+     EXPLANATION
+     
+     IMPORTANT:
+     M3 explanation gets FIRST PRIORITY.
+     This prevents M2 generic explanation from
+     replacing the actual rule-based explanation.
+     ===================================================== */
+
+  const explanation =
+    (
+      firstAnomaly?.reason &&
+      String(firstAnomaly.reason).trim()
+    )
+      ? String(firstAnomaly.reason).trim()
+      : (
+          m4?.explanation &&
+          String(m4.explanation).trim()
+        )
+      ? String(m4.explanation).trim()
+      : (
+          m2?.reason &&
+          String(m2.reason).trim()
+        )
+      ? String(m2.reason).trim()
+      : m2Anomaly
+      ? (
+          m2?.anomaly_score != null
+            ? `Isolation Forest detected an unusual weather pattern (anomaly score: ${Number(
+                m2.anomaly_score
+              ).toFixed(4)}).`
+            : "Isolation Forest detected an unusual weather pattern."
+        )
+      : "Weather readings are normal.";
+
+
+  /* =====================================================
+     RISK SCORE
+     ===================================================== */
+
+  const riskScore = Math.max(
+    0,
+    Math.min(
+      100,
+      Number(
+        m4?.risk_score ??
+        station?.risk ??
+        0
+      )
+    )
+  );
+
+
+  /* =====================================================
+     HEALTH SCORE
+     ===================================================== */
+
+  const healthScore = Math.max(
+    0,
+    Math.min(
+      100,
+      Number(
+        m4?.station_health ??
+        m4?.sensor_health ??
+        station?.stationHealth ??
+        station?.sensorHealth ??
+        100
+      )
+    )
+  );
+
+
+  /* =====================================================
+     CONFIDENCE
+     ===================================================== */
+
+  const rawConfidence =
+    Number(
+      m4?.confidence ??
+      0
+    );
+
+  const confidence =
+    Math.max(
+      0,
+      Math.min(
+        100,
+        rawConfidence <= 1
+          ? rawConfidence * 100
+          : rawConfidence
+      )
+    );
+
+
+  /* =====================================================
+     SINGLE STATION STATUS
+     ===================================================== */
+
+  const stationStatus =
+    riskScore >= 70
+      ? "HIGH RISK"
+      : riskScore >= 40
+      ? "MEDIUM RISK"
+      : "NORMAL";
+
+
+  /* =====================================================
+     SEVERITY
+     ===================================================== */
+
+  const severity =
+    riskScore >= 85
+      ? "CRITICAL"
+      : riskScore >= 70
+      ? "HIGH"
+      : riskScore >= 40
+      ? "MEDIUM"
+      : "LOW";
+
+
+  /* =====================================================
+     SYSTEM ASSESSMENT
+     ===================================================== */
+
+  const systemAssessment =
+    isAnomaly
+      ? explanation
+      : "Weather station is operating normally.";
+
+
+  /* =====================================================
+     CLEAR LOG
+     ===================================================== */
+
+  const [
+    clearedLogs,
+    setClearedLogs
+  ] = React.useState(false);
+
+
+  const clearLog = () => {
+    setClearedLogs(true);
+  };
+
+
+  /* =====================================================
+     LATEST HISTORICAL ALERT
+     ===================================================== */
+
+  const allEvents =
+    history.flatMap(
+      (entry) =>
+
+        normalizeM3(
+          entry?.m3
+        )
+          .filter(
+            (event) =>
+              event?.anomaly === true
+          )
+          .map(
+            (event) => ({
+              ...event,
+
+              timestamp:
+                event?.timestamp ||
+                entry?.timestamp,
+
+              station_id:
+                event?.station_id ||
+                entry?.station_id ||
+                station?.station_id ||
+                station?.id,
+            })
+          )
+    );
+
+
+  const latestEvent =
+    allEvents.length > 0
+      ? allEvents[
+          allEvents.length - 1
+        ]
+      : null;
+
+
+  /* =====================================================
+     RENDER
+     ===================================================== */
 
   return (
 
-    <div className="panel-content station-detail">
+    <div className="station-details-page">
 
-      <div className="panel-heading">
 
-        <div>
+      {/* =================================================
+          HEADER
+          ================================================= */}
 
-          <span className="section-kicker">
+      <div className="station-details-header">
 
-            STATION INSPECTION ·
-            {' '}
-            {parameter.toUpperCase()}
+        <button
+          className="station-back-btn"
+          onClick={onBack}
+        >
+          ← Back
+        </button>
 
-          </span>
 
-          <h2>
-            {station.id}
-          </h2>
+        <div className="station-title-area">
+
+          <div>
+
+            <span className="section-kicker">
+              WEATHER STATION
+            </span>
+
+
+            <h2>
+              {station?.station_id ||
+                station?.id ||
+                "Unknown Station"}
+            </h2>
+
+
+            <p>
+              {station?.location ||
+                station?.city ||
+                "Unknown Location"}
+            </p>
+
+          </div>
+
+
+          {/* CURRENT STATION RISK */}
+
+          <div
+            className={`station-status-badge ${
+              stationStatus ===
+              "HIGH RISK"
+                ? "risk-high"
+                : stationStatus ===
+                  "MEDIUM RISK"
+                ? "risk-medium"
+                : "risk-normal"
+            }`}
+          >
+            {stationStatus}
+          </div>
 
         </div>
 
-        <button
-          className="close-button"
-          onClick={onClose}
-        >
-
-          <X size={16} />
-
-        </button>
-
       </div>
 
 
-      <div className="station-location">
 
-        <Globe2 size={15} />
+      {/* =================================================
+          CURRENT CONDITION
+          ================================================= */}
 
-        {station.city},
-        {' '}
-        {station.region}
+      <section className="station-details-card">
 
-        <StatusPill
-          status={station.status}
-        />
+        <div className="station-details-card-heading">
 
+          <div>
+
+            <span className="section-kicker">
+              CURRENT CONDITION
+            </span>
+
+            <h3>
+              Live weather readings
+            </h3>
+
+          </div>
+
+        </div>
+
+
+        <div className="station-weather-grid">
+
+          {Object.entries(
+            station?.weatherData || {}
+          )
+            .filter(
+              ([key]) =>
+                [
+                  "temperature",
+                  "humidity",
+                  "pressure",
+                  "wind_speed",
+                  "rainfall",
+                ].includes(key)
+            )
+            .map(
+              ([key, value]) => (
+
+                <Reading
+                  key={key}
+                  label={key}
+                  value={value}
+                />
+
+              )
+            )}
+
+        </div>
+
+      </section>
+
+
+
+      {/* =================================================
+          ANOMALY ANALYSIS
+          ================================================= */}
+
+      <section className="station-details-card">
+
+        <div className="station-details-card-heading">
+
+          <div>
+
+            <span className="section-kicker">
+              ANOMALY ANALYSIS
+            </span>
+
+            <h3>
+              Weather condition analysis
+            </h3>
+
+          </div>
+
+        </div>
+
+
+        <div className="anomaly-analysis">
+
+
+          {/* =============================================
+              STATUS + ISSUE
+              ============================================= */}
+
+          <div className="analysis-status-row">
+
+
+            {/* DETECTION STATUS */}
+
+            <div className="analysis-status-box">
+
+              <span>
+                Detection Status
+              </span>
+
+
+              <strong
+                className={
+                  isAnomaly
+                    ? "status-danger"
+                    : "status-normal"
+                }
+              >
+
+                {isAnomaly
+                  ? "ANOMALY DETECTED"
+                  : "NORMAL"}
+
+              </strong>
+
+            </div>
+
+
+
+            {/* ISSUE */}
+
+            <div className="analysis-status-box">
+
+              <span>
+                Issue
+              </span>
+
+
+              <strong>
+
+                {isAnomaly
+                  ? anomalyType
+                  : "No anomaly"}
+
+              </strong>
+
+            </div>
+
+          </div>
+
+
+
+          {/* =============================================
+              ANOMALY DETAILS
+              ============================================= */}
+
+          {isAnomaly && (
+
+            <div className="anomaly-detail-grid">
+
+
+              {/* PARAMETER */}
+
+              <div className="anomaly-detail">
+
+                <span>
+                  Parameter
+                </span>
+
+
+                <strong>
+
+                  {feature ||
+                    "Weather parameter"}
+
+                </strong>
+
+              </div>
+
+
+
+              {/* DETECTION */}
+
+              <div className="anomaly-detail">
+
+                <span>
+                  Detection
+                </span>
+
+
+                <strong>
+
+                  {detectionType}
+
+                </strong>
+
+              </div>
+
+            </div>
+
+          )}
+
+
+
+          {/* =============================================
+              EXPLANATION
+              ============================================= */}
+
+          <div className="anomaly-reason">
+
+            <span>
+              Explanation
+            </span>
+
+
+            <p>
+              {explanation}
+            </p>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+
+      {/* =================================================
+          RISK & HEALTH
+          ================================================= */}
+
+      <section className="station-details-card">
+
+        <div className="station-details-card-heading">
+
+          <div>
+
+            <span className="section-kicker">
+              RISK & HEALTH
+            </span>
+
+            <h3>
+              Station condition
+            </h3>
+
+          </div>
+
+        </div>
+
+
+
+        <div className="risk-health-summary">
+
+
+          {/* RISK */}
+
+          <div className="risk-health-item">
+
+            <span>
+              Risk Score
+            </span>
+
+
+            <strong>
+              {Math.round(
+                riskScore
+              )}
+            </strong>
+
+
+            <small>
+              / 100
+            </small>
+
+          </div>
+
+
+
+          {/* HEALTH */}
+
+          <div className="risk-health-item">
+
+            <span>
+              Health Score
+            </span>
+
+
+            <strong>
+              {Math.round(
+                healthScore
+              )}
+            </strong>
+
+
+            <small>
+              / 100
+            </small>
+
+          </div>
+
+
+
+          {/* SEVERITY */}
+
+          <div className="risk-health-item">
+
+            <span>
+              Severity
+            </span>
+
+
+            <strong>
+              {severity}
+            </strong>
+
+          </div>
+
+
+
+          {/* CONFIDENCE */}
+
+          <div className="risk-health-item">
+
+            <span>
+              Confidence
+            </span>
+
+
+            <strong>
+              {Math.round(
+                confidence
+              )}%
+            </strong>
+
+          </div>
+
+        </div>
+
+
+
+        {/* SYSTEM ASSESSMENT */}
+
+        <div className="health-explanation">
+
+          <span>
+            System assessment
+          </span>
+
+
+          <p>
+            {systemAssessment}
+          </p>
+
+        </div>
+
+      </section>
+
+
+
+      {/* =================================================
+          STATION OVERVIEW BAR GRAPH
+          ================================================= */}
+
+      <section className="station-details-card">
+
+        <div className="station-details-card-heading">
+
+          <div>
+
+            <span className="section-kicker">
+              STATION OVERVIEW
+            </span>
+
+
+            <h3>
+              Risk, health & confidence
+            </h3>
+
+          </div>
+
+        </div>
+
+
+
+        <div className="station-overview-chart">
+
+          <div className="bar-chart">
+
+
+            {/* RISK */}
+
+            <div className="bar-item">
+
+              <div className="bar-value">
+                {Math.round(
+                  riskScore
+                )}
+              </div>
+
+
+              <div className="bar-track">
+
+                <div
+                  className="bar-fill bar-risk"
+                  style={{
+                    height:
+                      `${riskScore}%`,
+                  }}
+                />
+
+              </div>
+
+
+              <span className="bar-label">
+                Risk
+              </span>
+
+            </div>
+
+
+
+            {/* HEALTH */}
+
+            <div className="bar-item">
+
+              <div className="bar-value">
+                {Math.round(
+                  healthScore
+                )}
+              </div>
+
+
+              <div className="bar-track">
+
+                <div
+                  className="bar-fill bar-health"
+                  style={{
+                    height:
+                      `${healthScore}%`,
+                  }}
+                />
+
+              </div>
+
+
+              <span className="bar-label">
+                Health
+              </span>
+
+            </div>
+
+
+
+            {/* CONFIDENCE */}
+
+            <div className="bar-item">
+
+              <div className="bar-value">
+                {Math.round(
+                  confidence
+                )}
+              </div>
+
+
+              <div className="bar-track">
+
+                <div
+                  className="bar-fill bar-confidence"
+                  style={{
+                    height:
+                      `${confidence}%`,
+                  }}
+                />
+
+              </div>
+
+
+              <span className="bar-label">
+                Confidence
+              </span>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+
+      {/* =================================================
+          RECENT ALERT
+          ================================================= */}
+
+      <section className="station-details-card compact-alert-card">
+
+
+        <div className="station-details-card-heading">
+
+          <div>
+
+            <span className="section-kicker">
+              RECENT ALERT
+            </span>
+
+
+            <h3>
+              Latest station event
+            </h3>
+
+          </div>
+
+
+
+          {/* CLEAR LOG */}
+
+          <button
+            className="clear-log-btn"
+            onClick={clearLog}
+          >
+            Clear Log
+          </button>
+
+        </div>
+
+
+
+        {/* LOG CLEARED */}
+
+        {clearedLogs ? (
+
+          <div className="station-history-empty">
+
+            Log cleared successfully.
+
+          </div>
+
+        ) : latestEvent ? (
+
+
+          /* =============================================
+             HISTORICAL EVENT
+             ============================================= */
+
+          <div className="station-event compact-event">
+
+            <div className="compact-event-header">
+
+              <strong>
+                {latestEvent?.anomaly_type ||
+                  "ANOMALY"}
+              </strong>
+
+
+              <span>
+
+                {latestEvent?.timestamp
+                  ? new Date(
+                      latestEvent.timestamp
+                    ).toLocaleString(
+                      "en-IN",
+                      {
+                        day: "2-digit",
+                        month: "2-digit",
+                        year: "numeric",
+                        hour: "2-digit",
+                        minute: "2-digit",
+                        second: "2-digit",
+                      }
+                    )
+                  : "Recent"}
+
+              </span>
+
+            </div>
+
+
+            <p>
+              {latestEvent?.reason ||
+                "Unusual weather reading detected."}
+            </p>
+
+          </div>
+
+
+        ) : isAnomaly ? (
+
+
+          /* =============================================
+             CURRENT ANOMALY IF NO HISTORY
+             ============================================= */
+
+          <div className="station-event compact-event">
+
+            <div className="compact-event-header">
+
+              <strong>
+                {anomalyType}
+              </strong>
+
+
+              <span>
+                Current reading
+              </span>
+
+            </div>
+
+
+            <p>
+              {explanation}
+            </p>
+
+          </div>
+
+
+        ) : (
+
+
+          /* =============================================
+             NO ALERT
+             ============================================= */
+
+          <div className="station-history-empty">
+
+            No recent alerts.
+
+          </div>
+
+        )}
+
+      </section>
+
+    </div>
+  );
+}
+function TrendChart({ title, unit, history, valueKey, group }) {
+
+  const points = history
+    .map((entry, index) => ({
+      timestamp: entry.timestamp,
+      value: Number(group ? entry[group]?.[valueKey] : entry.weather_data?.[valueKey])
+    }))
+    .filter((point) => Number.isFinite(point.value))
+    .map((point, index) => ({ ...point, index }))
+
+  if (!points.length) {
+    return (
+      <div className="trend-card trend-empty">
+        <strong>{title}</strong>
+        <span>No historical data</span>
       </div>
+    )
+  }
 
+  const width = 320
+  const height = 130
+  const padding = { top: 16, right: 12, bottom: 28, left: 34 }
+  const min = Math.min(...points.map((point) => point.value))
+  const max = Math.max(...points.map((point) => point.value))
+  const spread = max - min || 1
+  const x = (index) => padding.left + (index / Math.max(points.length - 1, 1)) * (width - padding.left - padding.right)
+  const y = (value) => padding.top + (1 - (value - min) / spread) * (height - padding.top - padding.bottom)
+  const line = points.map((point) => `${x(point.index)},${y(point.value)}`).join(' ')
 
-      <div className="station-risk">
-
-        <span>
-          Risk score
-        </span>
-
-        <strong>
-          {station.risk}/100
-        </strong>
-
+  return (
+    <div className="trend-card">
+      <div className="trend-card-heading">
+        <strong>{title}</strong>
+        <span>{unit}</span>
       </div>
+      <svg className="trend-chart" viewBox={`0 0 ${width} ${height}`} role="img" aria-label={`${title} trend`}>
+        <line x1={padding.left} y1={height - padding.bottom} x2={width - padding.right} y2={height - padding.bottom} className="trend-axis" />
+        <line x1={padding.left} y1={padding.top} x2={padding.left} y2={height - padding.bottom} className="trend-axis" />
+        <polyline points={line} className="trend-line" />
+        {points.map((point) => (
+          <circle key={`${point.timestamp}-${point.index}`} cx={x(point.index)} cy={y(point.value)} r="3" className="trend-point">
+            <title>{`${new Date(point.timestamp).toLocaleString()} · ${point.value}${unit}`}</title>
+          </circle>
+        ))}
+        <text x={padding.left} y={height - 8} className="trend-label">{new Date(points[0].timestamp).toLocaleTimeString()}</text>
+        <text x={width - padding.right} y={height - 8} textAnchor="end" className="trend-label">{new Date(points[points.length - 1].timestamp).toLocaleTimeString()}</text>
+        <text x="4" y={padding.top + 4} className="trend-label">{max}</text>
+        <text x="4" y={height - padding.bottom} className="trend-label">{min}</text>
+      </svg>
+    </div>
+  )
+}
 
 
-      <div className="station-readings">
+function StationEvents({ history }) {
 
-        <Reading
-          label="Temperature"
-          value={`${station.temp}°C`}
-          icon={Thermometer}
-        />
+  const events = history.flatMap((entry) => (
+    normalizeM3(entry.m3)
+      .filter((event) => event.anomaly)
+      .map((event) => ({
+        ...event,
+        timestamp: event.timestamp || entry.timestamp
+      }))
+  ))
 
-        <Reading
-          label="Humidity"
-          value={`${station.humidity}%`}
-          icon={CloudSun}
-        />
+  if (!events.length) {
+    return <div className="station-history-empty">No station events available.</div>
+  }
 
-        <Reading
-          label="Pressure"
-          value={`${station.pressure} hPa`}
-          icon={Gauge}
-        />
+  return (
+    <div className="station-events-list">
+      {events.map((event, index) => (
+        <div className="station-event" key={`${event.timestamp}-${index}`}>
+          <span>{event.timestamp}</span>
+          <strong>{event.anomaly_type || event.feature}</strong>
+          <p>{event.reason || event.value}</p>
+        </div>
+      ))}
+    </div>
+  )
+}
 
-        <Reading
-          label="Wind speed"
-          value={`${station.wind} km/h`}
-          icon={Wind}
-        />
 
-        <Reading
-          label="Rainfall"
-          value={`${station.rainfall} mm`}
-          icon={CloudRain}
-        />
+function HealthBar({ value }) {
 
+  const numericValue = Number(value)
+  const hasValue = Number.isFinite(numericValue)
+
+  return (
+    <div className="health-bar">
+      <div className="health-bar-track">
+        {hasValue && <span style={{ width: `${Math.max(0, Math.min(100, numericValue))}%` }} />}
       </div>
-
+      <strong>{hasValue ? numericValue : ''}</strong>
+      <small>Health Score</small>
     </div>
   )
 }
@@ -3038,9 +4518,17 @@ function StationPanel({
 
 function Reading({
   label,
-  value,
-  icon: Icon
+  value
 }) {
+
+  const weatherDisplay = {
+    temperature: ['Temperature', Thermometer, '°C'],
+    humidity: ['Humidity', CloudSun, '%'],
+    pressure: ['Pressure', Gauge, 'hPa'],
+    wind_speed: ['Wind Speed', Wind, 'km/h'],
+    rainfall: ['Rainfall', CloudRain, 'mm']
+  }
+  const [displayLabel, Icon, unit] = weatherDisplay[label] || [label, Activity, '']
 
   return (
 
@@ -3051,15 +4539,81 @@ function Reading({
       <div>
 
         <span>
-          {label}
+          {displayLabel}
         </span>
 
         <strong>
-          {value}
+          {value}{unit}
         </strong>
 
       </div>
 
+    </div>
+  )
+}
+
+
+function DetailField({ label, value }) {
+
+  const displayValue = value !== null && typeof value === 'object'
+    ? Object.entries(value).map(([key, item]) => `${key}: ${item}`).join(' · ')
+    : String(value)
+
+  return (
+    <div className="detail-field">
+      <span>{label}</span>
+      <strong>{displayValue}</strong>
+    </div>
+  )
+}
+
+
+function FeatureHealthTable({ featureHealth, weatherData }) {
+
+  if (!featureHealth || typeof featureHealth !== 'object') {
+    return null
+  }
+
+  const weatherLabels = {
+    temperature: 'Temperature',
+    humidity: 'Humidity',
+    pressure: 'Pressure',
+    wind_speed: 'Wind Speed',
+    rainfall: 'Rainfall'
+  }
+
+  return (
+    <div className="feature-health-table">
+      {Object.entries(featureHealth).map(([feature, health]) => (
+        <FeatureHealthRow
+          key={feature}
+          feature={feature}
+          health={health}
+          currentValue={weatherData?.[feature]}
+          label={weatherLabels[feature] || feature}
+        />
+      ))}
+    </div>
+  )
+}
+
+
+function FeatureHealthRow({ feature, health, currentValue, label }) {
+
+  const numericHealth = Number(health?.value ?? health)
+  const hasHealth = Number.isFinite(numericHealth)
+
+  return (
+    <div className="feature-health-row" data-feature={feature}>
+          <div className="feature-health-label">
+            <span>{label}</span>
+            <small>{currentValue}</small>
+          </div>
+          <div className="feature-health-track">
+            {hasHealth && <span style={{ width: `${Math.max(0, Math.min(100, numericHealth))}%` }} />}
+          </div>
+          <strong>{hasHealth ? numericHealth : ''}</strong>
+          <small>{health?.status ?? ''}</small>
     </div>
   )
 }
