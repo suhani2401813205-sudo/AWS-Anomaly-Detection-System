@@ -46,7 +46,10 @@ def analyze_single_station(data, station_id):
 
     results = []
 
+    # --------------------------------------------------
     # Sort readings by timestamp
+    # --------------------------------------------------
+
     data = data.sort_values("timestamp").reset_index(drop=True)
 
     # --------------------------------------------------
@@ -134,14 +137,15 @@ def analyze_single_station(data, station_id):
             continue
 
         values = data[feature].dropna().tolist()
+
         original_indices = data.index[
             data[feature].notna()
         ].tolist()
 
         result = detect_frozen_value(
-    values,
-    feature=feature
-)
+            values,
+            feature=feature
+        )
 
         if result["anomaly"]:
 
@@ -153,13 +157,16 @@ def analyze_single_station(data, station_id):
                 position is not None
                 and position < len(original_indices)
             ):
+
                 original_index = original_indices[position]
 
                 timestamp = data.loc[
                     original_index,
                     "timestamp"
                 ]
+
             else:
+
                 timestamp = None
 
             anomaly_result = create_anomaly_result(
@@ -196,6 +203,79 @@ def analyze_single_station(data, station_id):
 
             results.append(anomaly_result)
 
+    # ==================================================
+    # 6. DOMINANT ANOMALY SELECTION
+    # ==================================================
+    #
+    # If multiple anomaly types are detected for the
+    # same latest reading, only ONE is returned.
+    #
+    # Priority:
+    #
+    # SPIKE
+    #   ↓
+    # FROZEN_VALUE
+    #   ↓
+    # DRIFT
+    #
+    # ==================================================
+
+    priority = {
+        "SPIKE": 1,
+        "FROZEN_VALUE": 2,
+        "DRIFT": 3,
+        "MISSING_DATA": 4,
+        "TIMESTAMP_GAP": 5,
+    }
+
+    if results:
+
+        # Latest reading timestamp
+        latest_timestamp = data["timestamp"].iloc[-1]
+
+        # --------------------------------------------------
+        # Get anomalies belonging to latest reading
+        # --------------------------------------------------
+
+        latest_results = [
+            result
+            for result in results
+            if (
+                result.anomaly
+                and result.timestamp == latest_timestamp
+            )
+        ]
+
+        if latest_results:
+
+            # --------------------------------------------------
+            # Select highest-priority anomaly
+            # --------------------------------------------------
+
+            dominant_result = min(
+                latest_results,
+                key=lambda result: priority.get(
+                    result.anomaly_type,
+                    99
+                )
+            )
+
+            # --------------------------------------------------
+            # Remove all anomaly results for latest timestamp
+            # --------------------------------------------------
+
+            results = [
+                result
+                for result in results
+                if result.timestamp != latest_timestamp
+            ]
+
+            # --------------------------------------------------
+            # Add only dominant anomaly
+            # --------------------------------------------------
+
+            results.append(dominant_result)
+
     return results
 
 
@@ -209,7 +289,10 @@ def analyze_weather_data(df):
 
     data = df.copy()
 
+    # --------------------------------------------------
     # Convert timestamp to datetime
+    # --------------------------------------------------
+
     data["timestamp"] = pd.to_datetime(
         data["timestamp"],
         format="mixed",
@@ -237,8 +320,10 @@ def analyze_weather_data(df):
 
     else:
 
-        # If station_id is not available,
-        # analyze the complete dataset
+        # --------------------------------------------------
+        # If station_id is not available
+        # --------------------------------------------------
+
         results = analyze_single_station(
             data,
             station_id=None
@@ -265,27 +350,40 @@ def integrate_m2_m3(df):
 
     data = df.copy()
 
+    # --------------------------------------------------
     # Convert timestamp
+    # --------------------------------------------------
+
     data["timestamp"] = pd.to_datetime(
         data["timestamp"],
         format="mixed",
         dayfirst=True
     )
 
+    # --------------------------------------------------
     # Run M3 rules
+    # --------------------------------------------------
+
     m3_results = analyze_weather_data(data)
 
+    # --------------------------------------------------
     # Preserve M2 output
+    # --------------------------------------------------
+
     integrated = data.copy()
 
+    # --------------------------------------------------
     # Add M3 columns
+    # --------------------------------------------------
+
     integrated["rule_anomaly"] = False
     integrated["rule_anomaly_type"] = "NORMAL"
     integrated["rule_feature"] = None
     integrated["rule_reason"] = ""
 
     # --------------------------------------------------
-    # Add M3 results to matching station + timestamp
+    # Add M3 results to matching
+    # station + timestamp
     # --------------------------------------------------
 
     for result in m3_results:
@@ -293,7 +391,10 @@ def integrate_m2_m3(df):
         if not result.anomaly:
             continue
 
-        # Match both station and timestamp
+        # --------------------------------------------------
+        # Match station + timestamp
+        # --------------------------------------------------
+
         if result.station_id is not None:
 
             matches = (
@@ -309,36 +410,31 @@ def integrate_m2_m3(df):
                 == result.timestamp
             )
 
+        # --------------------------------------------------
+        # Mark rule anomaly
+        # --------------------------------------------------
+
         integrated.loc[
             matches,
             "rule_anomaly"
         ] = True
 
-        # Add anomaly type
-        existing_type = integrated.loc[
+        # --------------------------------------------------
+        # IMPORTANT:
+        # Do NOT concatenate anomaly types.
+        #
+        # Only one dominant anomaly type is stored.
+        # --------------------------------------------------
+
+        integrated.loc[
             matches,
             "rule_anomaly_type"
-        ].iloc[0]
+        ] = result.anomaly_type
 
-        if existing_type == "NORMAL":
-
-            integrated.loc[
-                matches,
-                "rule_anomaly_type"
-            ] = result.anomaly_type
-
-        else:
-
-            integrated.loc[
-                matches,
-                "rule_anomaly_type"
-            ] = (
-                existing_type
-                + ", "
-                + result.anomaly_type
-            )
-
+        # --------------------------------------------------
         # Add feature
+        # --------------------------------------------------
+
         if result.feature is not None:
 
             if isinstance(result.feature, list):
@@ -358,7 +454,10 @@ def integrate_m2_m3(df):
                 "rule_feature"
             ] = feature_value
 
+        # --------------------------------------------------
         # Add reason
+        # --------------------------------------------------
+
         integrated.loc[
             matches,
             "rule_reason"

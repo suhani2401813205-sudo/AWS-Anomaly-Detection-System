@@ -21,11 +21,8 @@ from fastapi.middleware.cors import CORSMiddleware
 MAX_HISTORY = 100
 MAX_PREDICTION_HISTORY = 100
 
-
-# =====================================
-# DEMO MODE
-# =====================================
-
+# Demo mode only identifies this API as a demo.
+# It does NOT override M2 or M3 results.
 DEMO_MODE = True
 
 
@@ -43,23 +40,20 @@ def get_station_state(station_id):
         station_states[station_id] = {
 
             "weather_history": [],
-
             "prediction_history": [],
-
             "overall_health": 100.0,
 
             "feature_health": {
-
                 "temperature": 100.0,
-
                 "humidity": 100.0,
-
                 "pressure": 100.0,
-
                 "wind_speed": 100.0,
-
                 "rainfall": 100.0
-            }
+            },
+
+            # Stores the latest timestamp received
+            # from Open-Meteo API
+            "last_api_timestamp": None
         }
 
     return station_states[station_id]
@@ -130,50 +124,6 @@ STATIONS = [
 
 
 # =====================================
-# CONTROLLED DEMO ANOMALIES
-# =====================================
-
-DEMO_ANOMALIES = {
-
-    # Healthy
-    "AWS_001": {},
-
-    # Healthy
-    "AWS_002": {},
-
-    # SPIKE
-    "AWS_003": {
-        "wind_speed": 140
-    },
-
-    # Healthy
-    "AWS_004": {},
-
-    # FROZEN VALUE
-    "AWS_005": {
-        "temperature": 30
-    },
-
-    # Healthy
-    "AWS_006": {},
-
-    # Healthy
-    "AWS_007": {}
-}
-
-
-# =====================================
-# DEMO ANOMALY STATIONS
-# =====================================
-
-DEMO_ANOMALY_STATIONS = {
-
-    "AWS_003",
-    "AWS_005"
-}
-
-
-# =====================================
 # FASTAPI APP
 # =====================================
 
@@ -182,12 +132,12 @@ app = FastAPI(
     title="AWS Anomaly Detection API - Demo",
 
     description=(
-        "Demo anomaly detection using "
+        "Weather station anomaly detection using "
         "Open-Meteo + Isolation Forest + "
         "Rule Engine + Risk Analysis"
     ),
 
-    version="1.0.0-demo"
+    version="2.0.0-demo"
 )
 
 
@@ -223,13 +173,11 @@ app.add_middleware(
 # =====================================
 
 model = joblib.load(
-
     "models/isolation_forest_model.pkl"
 )
 
 
 scaler = joblib.load(
-
     "models/scaler.pkl"
 )
 
@@ -267,16 +215,16 @@ def home():
             "online",
 
         "mode":
-            "demo",
+            "manual + live",
 
-        "demo_anomalies": {
+        "pipeline":
+            "M2 Isolation Forest → M3 Rule Engine → M4 Risk Analysis",
 
-            "AWS_003":
-                "SPIKE - wind speed",
+        "manual_testing":
+            True,
 
-            "AWS_005":
-                "FROZEN_VALUE - temperature"
-        }
+        "total_stations":
+            len(STATIONS)
     }
 
 
@@ -293,10 +241,10 @@ def health_check():
             "healthy",
 
         "service":
-            "AWS Anomaly Detection Demo API",
+            "AWS Anomaly Detection API",
 
         "mode":
-            "demo",
+            "manual + live",
 
         "model_loaded":
             True,
@@ -313,7 +261,22 @@ def health_check():
 
 
 # =====================================
+# FIND STATION
+# =====================================
+
+def station_exists(station_id):
+
+    return any(
+
+        station["id"] == station_id
+
+        for station in STATIONS
+    )
+
+
+# =====================================
 # MAIN ANOMALY DETECTION PIPELINE
+#
 # M2 → M3 → M4
 # =====================================
 
@@ -324,6 +287,18 @@ def run_anomaly_pipeline(
     station_id: str
 
 ):
+
+    # =====================================
+    # VALIDATE STATION
+    # =====================================
+
+    if not station_exists(station_id):
+
+        raise ValueError(
+
+            f"Unknown station ID: {station_id}"
+        )
+
 
     # =====================================
     # GET STATION STATE
@@ -352,6 +327,13 @@ def run_anomaly_pipeline(
 
 
     # =====================================
+    # CURRENT TIMESTAMP
+    # =====================================
+
+    current_timestamp = datetime.now()
+
+
+    # =====================================
     # M2
     # ISOLATION FOREST
     # =====================================
@@ -374,24 +356,31 @@ def run_anomaly_pipeline(
     ])
 
 
+    # Scale input using the trained scaler
     scaled_data = scaler.transform(
 
         input_data
     )
 
 
+    # Isolation Forest prediction
     prediction = model.predict(
 
         scaled_data
     )[0]
 
 
+    # Isolation Forest decision score
     anomaly_score = model.decision_function(
 
         scaled_data
     )[0]
 
 
+    # Convert sklearn output
+    #
+    # -1 = anomaly
+    #  1 = normal
     ml_prediction = (
 
         1
@@ -410,38 +399,6 @@ def run_anomaly_pipeline(
 
         else "Normal"
     )
-
-
-    # =====================================
-    # DEMO MODE
-    #
-    # Only AWS_003 and AWS_005
-    # are allowed to become anomalies.
-    #
-    # This prevents random M2/M3 results
-    # from other healthy stations during demo.
-    # =====================================
-
-    if (
-
-        DEMO_MODE
-
-        and station_id not in DEMO_ANOMALY_STATIONS
-
-    ):
-
-        ml_prediction = 0
-
-        ml_status = "Normal"
-
-        anomaly_score = 0.0
-
-
-    # =====================================
-    # CURRENT TIMESTAMP
-    # =====================================
-
-    current_timestamp = datetime.now()
 
 
     # =====================================
@@ -503,24 +460,6 @@ def run_anomaly_pipeline(
 
 
     # =====================================
-    # DEMO CONTROL
-    #
-    # Healthy stations should remain
-    # healthy during demonstration.
-    # =====================================
-
-    if (
-
-        DEMO_MODE
-
-        and station_id not in DEMO_ANOMALY_STATIONS
-
-    ):
-
-        m3_results = []
-
-
-    # =====================================
     # M3 DEBUG
     # =====================================
 
@@ -538,20 +477,17 @@ def run_anomaly_pipeline(
         "========================================"
     )
 
-
     print(
         "\nLatest weather readings:"
     )
 
-
     print(
 
-        history_df.tail(3).to_string(
+        history_df.tail(5).to_string(
 
             index=False
         )
     )
-
 
     print(
         "\nM3 Results:"
@@ -579,7 +515,6 @@ def run_anomaly_pipeline(
                 f"Timestamp: {result.timestamp}"
             )
 
-
             print(
 
                 f"Reason: {result.reason}"
@@ -599,15 +534,11 @@ def run_anomaly_pipeline(
 
     current_m3_results = []
 
-
     rule_anomaly = False
-
 
     rule_anomaly_types = []
 
-
     rule_features = []
-
 
     rule_reasons = []
 
@@ -615,6 +546,12 @@ def run_anomaly_pipeline(
     # =====================================
     # SAFE TIMESTAMP MATCHING
     # =====================================
+
+    current_timestamp_pd = pd.to_datetime(
+
+        current_timestamp
+    )
+
 
     for result in m3_results:
 
@@ -629,25 +566,21 @@ def run_anomaly_pipeline(
         )
 
 
-        current_timestamp_pd = pd.to_datetime(
+        timestamp_difference = abs(
 
-            current_timestamp
+            (
+
+                result_timestamp
+
+                - current_timestamp_pd
+
+            ).total_seconds()
         )
 
 
         timestamp_match = (
 
-            abs(
-
-                (
-
-                    result_timestamp
-
-                    - current_timestamp_pd
-
-                ).total_seconds()
-
-            ) < 0.001
+            timestamp_difference < 0.001
         )
 
 
@@ -720,7 +653,7 @@ def run_anomaly_pipeline(
     # FALLBACK
     #
     # If exact timestamp matching fails,
-    # use latest M3 anomaly result.
+    # use latest M3 result.
     # =====================================
 
     if (
@@ -834,6 +767,39 @@ def run_anomaly_pipeline(
 
 
     # =====================================
+    # REMOVE DUPLICATES
+    # =====================================
+
+    rule_anomaly_types = list(
+
+        dict.fromkeys(
+
+            rule_anomaly_types
+        )
+    )
+
+
+    rule_features = list(
+
+        dict.fromkeys(
+
+            str(feature)
+
+            for feature in rule_features
+        )
+    )
+
+
+    rule_reasons = list(
+
+        dict.fromkeys(
+
+            rule_reasons
+        )
+    )
+
+
+    # =====================================
     # PREPARE M2 + M3 DATA FOR M4
     # =====================================
 
@@ -879,17 +845,13 @@ def run_anomaly_pipeline(
         "rule_anomaly":
             rule_anomaly,
 
-
         "rule_anomaly_type":
 
             (
 
                 ", ".join(
 
-                    dict.fromkeys(
-
-                        rule_anomaly_types
-                    )
+                    rule_anomaly_types
                 )
 
                 if rule_anomaly_types
@@ -897,20 +859,13 @@ def run_anomaly_pipeline(
                 else "NORMAL"
             ),
 
-
         "rule_feature":
 
             (
 
                 ", ".join(
 
-                    dict.fromkeys(
-
-                        str(feature)
-
-                        for feature
-                        in rule_features
-                    )
+                    rule_features
                 )
 
                 if rule_features
@@ -918,17 +873,13 @@ def run_anomaly_pipeline(
                 else None
             ),
 
-
         "rule_reason":
 
             (
 
                 " | ".join(
 
-                    dict.fromkeys(
-
-                        rule_reasons
-                    )
+                    rule_reasons
                 )
 
                 if rule_reasons
@@ -1036,10 +987,7 @@ def run_anomaly_pipeline(
 
                     ", ".join(
 
-                        dict.fromkeys(
-
-                            rule_anomaly_types
-                        )
+                        rule_anomaly_types
                     )
 
                     if rule_anomaly_types
@@ -1047,20 +995,13 @@ def run_anomaly_pipeline(
                     else "NORMAL"
                 ),
 
-
             "feature":
 
                 (
 
                     ", ".join(
 
-                        dict.fromkeys(
-
-                            str(feature)
-
-                            for feature
-                            in rule_features
-                        )
+                        rule_features
                     )
 
                     if rule_features
@@ -1068,17 +1009,13 @@ def run_anomaly_pipeline(
                     else None
                 ),
 
-
             "reason":
 
                 (
 
                     " | ".join(
 
-                        dict.fromkeys(
-
-                            rule_reasons
-                        )
+                        rule_reasons
                     )
 
                     if rule_reasons
@@ -1086,7 +1023,6 @@ def run_anomaly_pipeline(
                     else
                         "No rule-based anomaly detected"
                 ),
-
 
             "details":
                 current_m3_results
@@ -1171,6 +1107,11 @@ def predict_anomaly(
 
 # =====================================
 # LIVE WEATHER + ANOMALY DETECTION API
+#
+# IMPORTANT:
+# No automatic demo anomaly injection.
+#
+# Live API uses actual Open-Meteo values.
 # =====================================
 
 @app.get("/predict/live")
@@ -1191,8 +1132,7 @@ def predict_live():
 
 
             # =================================
-            # IMPORTANT:
-            # Get state safely
+            # GET STATION STATE
             # =================================
 
             state = get_station_state(
@@ -1201,20 +1141,11 @@ def predict_live():
             )
 
 
-            history = state[
-
-                "weather_history"
-            ]
-
-
             latitude = station[
-
                 "latitude"
             ]
 
-
             longitude = station[
-
                 "longitude"
             ]
 
@@ -1268,7 +1199,113 @@ def predict_live():
 
 
             # =================================
-            # ORIGINAL LIVE WEATHER
+            # GET OPEN-METEO TIMESTAMP
+            # =================================
+
+            api_timestamp = current.get("time")
+
+
+            # =================================
+            # AVOID DUPLICATE LIVE READINGS
+            #
+            # Open-Meteo can return the same
+            # current timestamp for multiple
+            # frontend polling requests.
+            #
+            # Do NOT run M2 → M3 → M4 again
+            # for the same API reading.
+            # =================================
+
+            if (
+
+                api_timestamp is not None
+
+                and state.get(
+                    "last_api_timestamp"
+                ) == api_timestamp
+
+            ):
+
+                print(
+
+                    f"[LIVE] Duplicate reading "
+                    f"skipped for {station_id}: "
+                    f"{api_timestamp}"
+                )
+
+
+                # =================================
+                # RETURN PREVIOUS PREDICTION
+                #
+                # This keeps the station visible
+                # in the dashboard.
+                # =================================
+
+                if state["prediction_history"]:
+
+                    prediction = (
+
+                        state[
+                            "prediction_history"
+                        ][-1]
+                    )
+
+
+                    results.append({
+
+                        "station":
+                            station,
+
+                        "weather_data":
+                            prediction[
+                                "weather_data"
+                            ],
+
+                        "m2":
+                            prediction[
+                                "m2"
+                            ],
+
+                        "m3":
+                            prediction[
+                                "m3"
+                            ],
+
+                        "m4":
+                            prediction[
+                                "m4"
+                            ],
+
+                        "timestamp":
+                            prediction[
+                                "timestamp"
+                            ],
+
+                        "duplicate":
+                            True
+                    })
+
+
+                    continue
+
+
+                # If there is no previous prediction,
+                # allow this reading to be processed.
+
+
+            # =================================
+            # SAVE NEW API TIMESTAMP
+            # =================================
+
+            if api_timestamp is not None:
+
+                state[
+                    "last_api_timestamp"
+                ] = api_timestamp
+
+
+            # =================================
+            # LIVE WEATHER VALUES
             # =================================
 
             weather_values = {
@@ -1285,7 +1322,6 @@ def predict_live():
                         )
                     ),
 
-
                 "humidity":
 
                     float(
@@ -1297,7 +1333,6 @@ def predict_live():
                             0
                         )
                     ),
-
 
                 "pressure":
 
@@ -1311,7 +1346,6 @@ def predict_live():
                         )
                     ),
 
-
                 "wind_speed":
 
                     float(
@@ -1323,7 +1357,6 @@ def predict_live():
                             0
                         )
                     ),
-
 
                 "rainfall":
 
@@ -1340,92 +1373,12 @@ def predict_live():
 
 
             # =================================
-            # CONTROLLED DEMO MODE
-            # =================================
-
-            if (
-
-                DEMO_MODE
-
-                and station_id in DEMO_ANOMALIES
-
-            ):
-
-                modifications = (
-
-                    DEMO_ANOMALIES[
-                        station_id
-                    ]
-                )
-
-
-                # =================================
-                # AWS_003
-                # SPIKE
-                #
-                # First 3 readings are normal.
-                # 4th reading becomes 120.
-                # After that it returns to real API.
-                # =================================
-
-                if station_id == "AWS_003":
-
-                    if len(history) == 3:
-
-                        if "wind_speed" in modifications:
-
-                            weather_values[
-                                "wind_speed"
-                            ] = modifications[
-                                "wind_speed"
-                            ]
-
-
-                            print(
-
-                                "[DEMO] AWS_003 "
-                                "SPIKE injected: "
-                                f"wind_speed="
-                                f"{modifications['wind_speed']}"
-                            )
-
-
-                # =================================
-                # AWS_005
-                # FROZEN VALUE
-                #
-                # Temperature always remains 30.
-                # After enough readings M3 detects
-                # FROZEN_VALUE.
-                # =================================
-
-                elif station_id == "AWS_005":
-
-                    if "temperature" in modifications:
-
-                        weather_values[
-                            "temperature"
-                        ] = modifications[
-                            "temperature"
-                        ]
-
-
-                        print(
-
-                            "[DEMO] AWS_005 "
-                            "FROZEN VALUE: "
-                            f"temperature="
-                            f"{modifications['temperature']}"
-                        )
-
-
-            # =================================
-            # PRINT FINAL DATA
+            # PRINT LIVE DATA
             # =================================
 
             print(
 
-                f"[DEMO] Final weather data "
+                f"[LIVE] Final weather data "
                 f"for {station_id}: "
                 f"{weather_values}"
             )
@@ -1508,7 +1461,10 @@ def predict_live():
                 "timestamp":
                     prediction[
                         "timestamp"
-                    ]
+                    ],
+
+                "duplicate":
+                    False
             })
 
 
@@ -1542,7 +1498,7 @@ def predict_live():
             "success",
 
         "mode":
-            "demo",
+            "live",
 
         "total_stations":
             len(STATIONS),
@@ -1552,6 +1508,90 @@ def predict_live():
 
         "timestamp":
             str(datetime.now())
+    }
+
+
+# =====================================
+# RESET ONE STATION
+#
+# Useful before every manual anomaly test
+# =====================================
+
+@app.post("/demo/reset/{station_id}")
+def reset_station(
+
+    station_id: str
+
+):
+
+    if not station_exists(station_id):
+
+        return {
+
+            "status":
+                "error",
+
+            "message":
+                f"Unknown station ID: {station_id}"
+        }
+
+
+    station_states[station_id] = {
+
+        "weather_history": [],
+
+        "prediction_history": [],
+
+        "overall_health": 100.0,
+
+        "feature_health": {
+
+            "temperature": 100.0,
+            "humidity": 100.0,
+            "pressure": 100.0,
+            "wind_speed": 100.0,
+            "rainfall": 100.0
+        },
+
+        # IMPORTANT:
+        # Reset Open-Meteo timestamp also
+        "last_api_timestamp": None
+    }
+
+
+    return {
+
+        "status":
+            "success",
+
+        "station_id":
+            station_id,
+
+        "message":
+            "Station history, health and live timestamp reset successfully"
+    }
+
+
+# =====================================
+# RESET ALL STATIONS
+# =====================================
+
+@app.post("/demo/reset-all")
+def reset_all_stations():
+
+    station_states.clear()
+
+
+    return {
+
+        "status":
+            "success",
+
+        "message":
+            "All station histories and health values reset successfully",
+
+        "total_stations":
+            len(STATIONS)
     }
 
 
@@ -1631,7 +1671,6 @@ def get_system_status():
                     ]
                 ),
 
-
             "prediction_history_size":
 
                 len(
@@ -1641,13 +1680,11 @@ def get_system_status():
                     ]
                 ),
 
-
             "sensor_health":
 
                 state[
                     "overall_health"
                 ],
-
 
             "feature_health":
 
@@ -1655,6 +1692,11 @@ def get_system_status():
                     "feature_health"
                 ],
 
+            "last_api_timestamp":
+
+                state[
+                    "last_api_timestamp"
+                ],
 
             "latest_result":
 
@@ -1668,7 +1710,7 @@ def get_system_status():
             "online",
 
         "mode":
-            "demo",
+            "manual + live",
 
         "model_status":
             "loaded",

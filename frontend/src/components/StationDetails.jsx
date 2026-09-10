@@ -112,11 +112,6 @@ export function StationDetailsView({
 
   /* =====================================================
      EXPLANATION
-     
-     IMPORTANT:
-     M3 explanation gets FIRST PRIORITY.
-     This prevents M2 generic explanation from
-     replacing the actual rule-based explanation.
      ===================================================== */
 
   const explanation =
@@ -448,9 +443,7 @@ export function StationDetailsView({
         <div className="anomaly-analysis">
 
 
-          {/* =============================================
-              STATUS + ISSUE
-              ============================================= */}
+          {/* STATUS + ISSUE */}
 
           <div className="analysis-status-row">
 
@@ -505,9 +498,7 @@ export function StationDetailsView({
 
 
 
-          {/* =============================================
-              ANOMALY DETAILS
-              ============================================= */}
+          {/* ANOMALY DETAILS */}
 
           {isAnomaly && (
 
@@ -557,9 +548,7 @@ export function StationDetailsView({
 
 
 
-          {/* =============================================
-              EXPLANATION
-              ============================================= */}
+          {/* EXPLANATION */}
 
           <div className="anomaly-reason">
 
@@ -707,6 +696,47 @@ export function StationDetailsView({
           </p>
 
         </div>
+
+      </section>
+
+
+
+      {/* =================================================
+          FEATURE / PARAMETER HEALTH
+          ================================================= */}
+
+      <section className="station-details-card">
+
+        <div className="station-details-card-heading">
+
+          <div>
+
+            <span className="section-kicker">
+              FEATURE HEALTH
+            </span>
+
+            <h3>
+              Parameter health status
+            </h3>
+
+          </div>
+
+        </div>
+
+
+        <FeatureHealthTable
+          featureHealth={
+            m4?.feature_health ||
+            station?.featureHealth ||
+            {}
+          }
+          weatherData={
+            station?.weatherData ||
+            {}
+          }
+          history={history}
+          m3Items={m3Items}
+        />
 
       </section>
 
@@ -894,9 +924,7 @@ export function StationDetailsView({
         ) : latestEvent ? (
 
 
-          /* =============================================
-             HISTORICAL EVENT
-             ============================================= */
+          /* HISTORICAL EVENT */
 
           <div className="station-event compact-event">
 
@@ -942,9 +970,7 @@ export function StationDetailsView({
         ) : isAnomaly ? (
 
 
-          /* =============================================
-             CURRENT ANOMALY IF NO HISTORY
-             ============================================= */
+          /* CURRENT ANOMALY IF NO HISTORY */
 
           <div className="station-event compact-event">
 
@@ -972,9 +998,7 @@ export function StationDetailsView({
         ) : (
 
 
-          /* =============================================
-             NO ALERT
-             ============================================= */
+          /* NO ALERT */
 
           <div className="station-history-empty">
 
@@ -989,109 +1013,372 @@ export function StationDetailsView({
     </div>
   );
 }
-export function TrendChart({ title, unit, history, valueKey, group }) {
+
+
+/* =====================================================
+   TREND CHART
+   ===================================================== */
+
+export function TrendChart({
+  title,
+  unit,
+  history,
+  valueKey,
+  group
+}) {
 
   const points = history
     .map((entry, index) => ({
       timestamp: entry.timestamp,
-      value: Number(group ? entry[group]?.[valueKey] : entry.weather_data?.[valueKey])
+      value: Number(
+        group
+          ? entry[group]?.[valueKey]
+          : entry.weather_data?.[valueKey]
+      )
     }))
-    .filter((point) => Number.isFinite(point.value))
-    .map((point, index) => ({ ...point, index }))
+    .filter(
+      (point) =>
+        Number.isFinite(point.value)
+    )
+    .map(
+      (point, index) => ({
+        ...point,
+        index
+      })
+    )
 
   if (!points.length) {
+
     return (
+
       <div className="trend-card trend-empty">
-        <strong>{title}</strong>
-        <span>No historical data</span>
+
+        <strong>
+          {title}
+        </strong>
+
+        <span>
+          No historical data
+        </span>
+
       </div>
+
     )
   }
 
   const width = 320
   const height = 130
-  const padding = { top: 16, right: 12, bottom: 28, left: 34 }
-  const min = Math.min(...points.map((point) => point.value))
-  const max = Math.max(...points.map((point) => point.value))
-  const spread = max - min || 1
-  const x = (index) => padding.left + (index / Math.max(points.length - 1, 1)) * (width - padding.left - padding.right)
-  const y = (value) => padding.top + (1 - (value - min) / spread) * (height - padding.top - padding.bottom)
-  const line = points.map((point) => `${x(point.index)},${y(point.value)}`).join(' ')
+
+  const padding = {
+    top: 16,
+    right: 12,
+    bottom: 28,
+    left: 34
+  }
+
+  const min = Math.min(
+    ...points.map(
+      (point) =>
+        point.value
+    )
+  )
+
+  const max = Math.max(
+    ...points.map(
+      (point) =>
+        point.value
+    )
+  )
+
+  const spread =
+    max - min || 1
+
+  const x = (index) =>
+    padding.left +
+    (
+      index /
+      Math.max(
+        points.length - 1,
+        1
+      )
+    ) *
+    (
+      width -
+      padding.left -
+      padding.right
+    )
+
+  const y = (value) =>
+    padding.top +
+    (
+      1 -
+      (
+        value - min
+      ) /
+      spread
+    ) *
+    (
+      height -
+      padding.top -
+      padding.bottom
+    )
+
+  const line =
+    points
+      .map(
+        (point) =>
+          `${x(point.index)},${y(point.value)}`
+      )
+      .join(' ')
 
   return (
+
     <div className="trend-card">
+
       <div className="trend-card-heading">
-        <strong>{title}</strong>
-        <span>{unit}</span>
+
+        <strong>
+          {title}
+        </strong>
+
+        <span>
+          {unit}
+        </span>
+
       </div>
-      <svg className="trend-chart" viewBox={`0 0 ${width} ${height}`} role="img" aria-label={`${title} trend`}>
-        <line x1={padding.left} y1={height - padding.bottom} x2={width - padding.right} y2={height - padding.bottom} className="trend-axis" />
-        <line x1={padding.left} y1={padding.top} x2={padding.left} y2={height - padding.bottom} className="trend-axis" />
-        <polyline points={line} className="trend-line" />
-        {points.map((point) => (
-          <circle key={`${point.timestamp}-${point.index}`} cx={x(point.index)} cy={y(point.value)} r="3" className="trend-point">
-            <title>{`${new Date(point.timestamp).toLocaleString()} · ${point.value}${unit}`}</title>
-          </circle>
-        ))}
-        <text x={padding.left} y={height - 8} className="trend-label">{new Date(points[0].timestamp).toLocaleTimeString()}</text>
-        <text x={width - padding.right} y={height - 8} textAnchor="end" className="trend-label">{new Date(points[points.length - 1].timestamp).toLocaleTimeString()}</text>
-        <text x="4" y={padding.top + 4} className="trend-label">{max}</text>
-        <text x="4" y={height - padding.bottom} className="trend-label">{min}</text>
+
+      <svg
+        className="trend-chart"
+        viewBox={`0 0 ${width} ${height}`}
+        role="img"
+        aria-label={`${title} trend`}
+      >
+
+        <line
+          x1={padding.left}
+          y1={height - padding.bottom}
+          x2={width - padding.right}
+          y2={height - padding.bottom}
+          className="trend-axis"
+        />
+
+        <line
+          x1={padding.left}
+          y1={padding.top}
+          x2={padding.left}
+          y2={height - padding.bottom}
+          className="trend-axis"
+        />
+
+        <polyline
+          points={line}
+          className="trend-line"
+        />
+
+        {points.map(
+          (point) => (
+
+            <circle
+              key={`${point.timestamp}-${point.index}`}
+              cx={x(point.index)}
+              cy={y(point.value)}
+              r="3"
+              className="trend-point"
+            >
+
+              <title>
+                {`${new Date(
+                  point.timestamp
+                ).toLocaleString()} · ${
+                  point.value
+                }${unit}`}
+              </title>
+
+            </circle>
+
+          )
+        )}
+
+        <text
+          x={padding.left}
+          y={height - 8}
+          className="trend-label"
+        >
+          {new Date(
+            points[0].timestamp
+          ).toLocaleTimeString()}
+        </text>
+
+        <text
+          x={width - padding.right}
+          y={height - 8}
+          textAnchor="end"
+          className="trend-label"
+        >
+          {new Date(
+            points[points.length - 1].timestamp
+          ).toLocaleTimeString()}
+        </text>
+
+        <text
+          x="4"
+          y={padding.top + 4}
+          className="trend-label"
+        >
+          {max}
+        </text>
+
+        <text
+          x="4"
+          y={height - padding.bottom}
+          className="trend-label"
+        >
+          {min}
+        </text>
+
       </svg>
+
     </div>
+
   )
 }
 
 
-export function StationEvents({ history }) {
+/* =====================================================
+   STATION EVENTS
+   ===================================================== */
 
-  const events = history.flatMap((entry) => (
-    normalizeM3(entry.m3)
-      .filter((event) => event.anomaly)
-      .map((event) => ({
-        ...event,
-        timestamp: event.timestamp || entry.timestamp
-      }))
-  ))
+export function StationEvents({
+  history
+}) {
+
+  const events =
+    history.flatMap(
+      (entry) => (
+
+        normalizeM3(
+          entry.m3
+        )
+          .filter(
+            (event) =>
+              event.anomaly
+          )
+          .map(
+            (event) => ({
+              ...event,
+              timestamp:
+                event.timestamp ||
+                entry.timestamp
+            })
+          )
+
+      )
+    )
 
   if (!events.length) {
-    return <div className="station-history-empty">No station events available.</div>
+
+    return (
+      <div className="station-history-empty">
+        No station events available.
+      </div>
+    )
   }
 
   return (
+
     <div className="station-events-list">
-      {events.map((event, index) => (
-        <div className="station-event" key={`${event.timestamp}-${index}`}>
-          <span>{event.timestamp}</span>
-          <strong>{event.anomaly_type || event.feature}</strong>
-          <p>{event.reason || event.value}</p>
-        </div>
-      ))}
+
+      {events.map(
+        (event, index) => (
+
+          <div
+            className="station-event"
+            key={`${event.timestamp}-${index}`}
+          >
+
+            <span>
+              {event.timestamp}
+            </span>
+
+            <strong>
+              {event.anomaly_type ||
+                event.feature}
+            </strong>
+
+            <p>
+              {event.reason ||
+                event.value}
+            </p>
+
+          </div>
+
+        )
+      )}
+
     </div>
   )
 }
 
 
-export function HealthBar({ value }) {
+/* =====================================================
+   HEALTH BAR
+   ===================================================== */
 
-  const numericValue = Number(value)
-  const hasValue = Number.isFinite(numericValue)
+export function HealthBar({
+  value
+}) {
+
+  const numericValue =
+    Number(value)
+
+  const hasValue =
+    Number.isFinite(
+      numericValue
+    )
 
   return (
+
     <div className="health-bar">
+
       <div className="health-bar-track">
-        {hasValue && <span style={{ width: `${Math.max(0, Math.min(100, numericValue))}%` }} />}
+
+        {hasValue && (
+
+          <span
+            style={{
+              width:
+                `${Math.max(
+                  0,
+                  Math.min(
+                    100,
+                    numericValue
+                  )
+                )}%`
+            }}
+          />
+
+        )}
+
       </div>
-      <strong>{hasValue ? numericValue : ''}</strong>
-      <small>Health Score</small>
+
+      <strong>
+        {hasValue
+          ? numericValue
+          : ''}
+      </strong>
+
+      <small>
+        Health Score
+      </small>
+
     </div>
   )
 }
 
 
-// =====================================
-// READING
-// =====================================
+/* =====================================================
+   READING
+   ===================================================== */
 
 export function Reading({
   label,
@@ -1099,13 +1386,50 @@ export function Reading({
 }) {
 
   const weatherDisplay = {
-    temperature: ['Temperature', Thermometer, '°C'],
-    humidity: ['Humidity', CloudSun, '%'],
-    pressure: ['Pressure', Gauge, 'hPa'],
-    wind_speed: ['Wind Speed', Wind, 'km/h'],
-    rainfall: ['Rainfall', CloudRain, 'mm']
+
+    temperature: [
+      'Temperature',
+      Thermometer,
+      '°C'
+    ],
+
+    humidity: [
+      'Humidity',
+      CloudSun,
+      '%'
+    ],
+
+    pressure: [
+      'Pressure',
+      Gauge,
+      'hPa'
+    ],
+
+    wind_speed: [
+      'Wind Speed',
+      Wind,
+      'km/h'
+    ],
+
+    rainfall: [
+      'Rainfall',
+      CloudRain,
+      'mm'
+    ]
+
   }
-  const [displayLabel, Icon, unit] = weatherDisplay[label] || [label, Activity, '']
+
+  const [
+    displayLabel,
+    Icon,
+    unit
+  ] =
+    weatherDisplay[label] ||
+    [
+      label,
+      Activity,
+      ''
+    ]
 
   return (
 
@@ -1120,7 +1444,8 @@ export function Reading({
         </span>
 
         <strong>
-          {value}{unit}
+          {value}
+          {unit}
         </strong>
 
       </div>
@@ -1130,75 +1455,497 @@ export function Reading({
 }
 
 
-export function DetailField({ label, value }) {
+/* =====================================================
+   DETAIL FIELD
+   ===================================================== */
 
-  const displayValue = value !== null && typeof value === 'object'
-    ? Object.entries(value).map(([key, item]) => `${key}: ${item}`).join(' · ')
-    : String(value)
+export function DetailField({
+  label,
+  value
+}) {
+
+  const displayValue =
+    value !== null &&
+    typeof value === 'object'
+
+      ? Object.entries(
+          value
+        )
+          .map(
+            ([key, item]) =>
+              `${key}: ${item}`
+          )
+          .join(' · ')
+
+      : String(value)
 
   return (
+
     <div className="detail-field">
-      <span>{label}</span>
-      <strong>{displayValue}</strong>
+
+      <span>
+        {label}
+      </span>
+
+      <strong>
+        {displayValue}
+      </strong>
+
     </div>
   )
 }
 
 
-export function FeatureHealthTable({ featureHealth, weatherData }) {
+/* =====================================================
+   FEATURE / PARAMETER HEALTH TABLE
+   ===================================================== */
 
-  if (!featureHealth || typeof featureHealth !== 'object') {
-    return null
+const featureMeta = {
+
+  temperature: {
+    label: 'Temperature',
+    unit: '°C',
+    Icon: Thermometer
+  },
+
+  humidity: {
+    label: 'Humidity',
+    unit: '%',
+    Icon: CloudSun
+  },
+
+  pressure: {
+    label: 'Pressure',
+    unit: 'hPa',
+    Icon: Gauge
+  },
+
+  wind_speed: {
+    label: 'Wind Speed',
+    unit: 'km/h',
+    Icon: Wind
+  },
+
+  rainfall: {
+    label: 'Rainfall',
+    unit: 'mm',
+    Icon: CloudRain
   }
 
-  const weatherLabels = {
-    temperature: 'Temperature',
-    humidity: 'Humidity',
-    pressure: 'Pressure',
-    wind_speed: 'Wind Speed',
-    rainfall: 'Rainfall'
+}
+
+
+/* =====================================================
+   FORMAT CURRENT READING
+   ===================================================== */
+
+function formatFeatureReading(
+  value,
+  unit
+) {
+
+  if (
+    value === null ||
+    value === undefined ||
+    value === '' ||
+    !Number.isFinite(
+      Number(value)
+    )
+  ) {
+
+    return '—'
+
   }
 
+  return `${
+    Number(value).toFixed(2)
+  }${unit}`
+}
+
+
+/* =====================================================
+   FORMAT HEALTH
+   ===================================================== */
+
+function formatHealthScore(
+  value
+) {
+
+  if (
+    !Number.isFinite(
+      Number(value)
+    )
+  ) {
+
+    return '—'
+
+  }
+
+  return `${Math.round(
+    Math.max(
+      0,
+      Math.min(
+        100,
+        Number(value)
+      )
+    )
+  )}%`
+}
+
+
+/* =====================================================
+   FEATURE STATUS
+   ===================================================== */
+
+function getFeatureStatus(
+  health,
+  hasAnomaly
+) {
+
+  if (hasAnomaly) {
+    return 'Anomaly'
+  }
+
+  if (health >= 80) {
+    return 'Healthy'
+  }
+
+  if (health >= 50) {
+    return 'Warning'
+  }
+
+  return 'Critical'
+}
+
+
+/* =====================================================
+   OBSERVED RANGE
+   ===================================================== */
+
+function getObservedRange(
+  history,
+  feature,
+  unit
+) {
+
+  const values =
+    history
+      .map(
+        (entry) =>
+          entry?.weather_data?.[feature]
+      )
+      .map(Number)
+      .filter(
+        Number.isFinite
+      )
+
+  if (!values.length) {
+    return '—'
+  }
+
+  const min =
+    Math.min(...values)
+
+  const max =
+    Math.max(...values)
+
+  return `${
+    min.toFixed(2)
+  }${unit} – ${
+    max.toFixed(2)
+  }${unit}`
+}
+
+
+/* =====================================================
+   ACTIVE ANOMALY FOR FEATURE
+   ===================================================== */
+
+function featureHasActiveAnomaly(
+  feature,
+  m3Items = []
+) {
+
+  return m3Items.some(
+    (item) =>
+      item?.anomaly === true &&
+      item?.feature === feature
+  )
+}
+
+
+/* =====================================================
+   FEATURE HEALTH TABLE
+   ===================================================== */
+
+export function FeatureHealthTable({
+  featureHealth,
+  weatherData,
+  history = [],
+  m3Items = []
+}) {
+
+  const entries =
+    Object.entries(
+      featureHealth || {}
+    ).filter(
+      ([feature]) =>
+        featureMeta[feature]
+    )
+
+
+  if (!entries.length) {
+
+    return (
+
+      <div className="feature-health-empty">
+
+        Waiting for the next live
+        M4 feature-health result.
+
+      </div>
+
+    )
+  }
+
+
   return (
-    <div className="feature-health-table">
-      {Object.entries(featureHealth).map(([feature, health]) => (
-        <FeatureHealthRow
-          key={feature}
-          feature={feature}
-          health={health}
-          currentValue={weatherData?.[feature]}
-          label={weatherLabels[feature] || feature}
-        />
-      ))}
+
+    <div className="feature-health-table-wrap">
+
+
+      {/* TABLE HEADER */}
+
+      <div
+        className="feature-health-table feature-health-header"
+        aria-hidden="true"
+      >
+
+        <span>
+          Parameter
+        </span>
+
+        <span>
+          Current value
+        </span>
+
+        <span>
+          Expected range
+        </span>
+
+        <span>
+          Health
+        </span>
+
+        <span>
+          Status
+        </span>
+
+      </div>
+
+
+
+      {/* TABLE ROWS */}
+
+      <div className="feature-health-table">
+
+        {entries.map(
+          ([feature, health]) => (
+
+            <FeatureHealthRow
+              key={feature}
+              feature={feature}
+              health={health}
+              currentValue={
+                weatherData?.[feature]
+              }
+              history={history}
+              m3Items={m3Items}
+            />
+
+          )
+        )}
+
+      </div>
+
     </div>
   )
 }
 
 
-export function FeatureHealthRow({ feature, health, currentValue, label }) {
+/* =====================================================
+   FEATURE HEALTH ROW
+   ===================================================== */
 
-  const numericHealth = Number(health?.value ?? health)
-  const hasHealth = Number.isFinite(numericHealth)
+export function FeatureHealthRow({
+  feature,
+  health,
+  currentValue,
+  history,
+  m3Items
+}) {
+
+  const {
+    label,
+    unit,
+    Icon
+  } =
+    featureMeta[feature]
+
+
+  const rawHealth =
+    health?.value ??
+    health
+
+
+  const numericHealth =
+    rawHealth === null ||
+    rawHealth === undefined ||
+    rawHealth === ''
+      ? NaN
+      : Number(rawHealth)
+
+
+  const hasHealth =
+    Number.isFinite(
+      numericHealth
+    )
+
+
+  const boundedHealth =
+    Math.max(
+      0,
+      Math.min(
+        100,
+        numericHealth
+      )
+    )
+
+
+  const hasAnomaly =
+    featureHasActiveAnomaly(
+      feature,
+      m3Items
+    )
+
+
+  const status =
+    hasHealth
+      ? getFeatureStatus(
+          boundedHealth,
+          hasAnomaly
+        )
+      : 'Awaiting data'
+
 
   return (
-    <div className="feature-health-row" data-feature={feature}>
-          <div className="feature-health-label">
-            <span>{label}</span>
-            <small>{currentValue}</small>
-          </div>
-          <div className="feature-health-track">
-            {hasHealth && <span style={{ width: `${Math.max(0, Math.min(100, numericHealth))}%` }} />}
-          </div>
-          <strong>{hasHealth ? numericHealth : ''}</strong>
-          <small>{health?.status ?? ''}</small>
+
+    <div
+      className="feature-health-row"
+      data-feature={feature}
+    >
+
+
+      {/* PARAMETER */}
+
+      <div className="feature-health-label">
+
+        <Icon size={17} />
+
+        <span>
+          {label}
+        </span>
+
+      </div>
+
+
+
+      {/* CURRENT VALUE */}
+
+      <span className="feature-health-current">
+
+        {formatFeatureReading(
+          currentValue,
+          unit
+        )}
+
+      </span>
+
+
+
+      {/* EXPECTED RANGE */}
+
+      <span className="feature-health-range">
+
+        {getObservedRange(
+          history,
+          feature,
+          unit
+        )}
+
+      </span>
+
+
+
+      {/* HEALTH */}
+
+      <div className="feature-health-score">
+
+        <span>
+
+          {formatHealthScore(
+            boundedHealth
+          )}
+
+        </span>
+
+
+        <div className="feature-health-track">
+
+          {hasHealth && (
+
+            <i
+              style={{
+                width:
+                  `${boundedHealth}%`
+              }}
+            />
+
+          )}
+
+        </div>
+
+      </div>
+
+
+
+      {/* STATUS */}
+
+      <span
+        className={`feature-health-status ${
+          status
+            .toLowerCase()
+            .replaceAll(
+              ' ',
+              '-'
+            )
+        }`}
+      >
+
+        <i />
+
+        {status}
+
+      </span>
+
     </div>
   )
 }
 
 
-// =====================================
-// ANOMALY CARD
-// =====================================
+/* =====================================================
+   ANOMALY CARD
+   ===================================================== */
 
 export function AnomalyCard({
   anomaly,
@@ -1318,9 +2065,9 @@ export function AnomalyCard({
 }
 
 
-// =====================================
-// PARAMETER MODAL
-// =====================================
+/* =====================================================
+   PARAMETER MODAL
+   ===================================================== */
 
 export function ParameterModal({
   parameter,
@@ -1338,6 +2085,7 @@ export function ParameterModal({
           : parameter === 'Rainfall'
             ? station.rainfall
             : station.pressure
+
 
   return (
 
@@ -1380,7 +2128,9 @@ export function ParameterModal({
 
           {value}
           {' '}
-          {parameterUnit(parameter)}
+          {parameterUnit(
+            parameter
+          )}
 
         </strong>
 
